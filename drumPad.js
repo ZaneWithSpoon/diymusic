@@ -24,6 +24,7 @@ view DrumPad {
   			<tr repeat={currentInstruments} >
           <td> {_} </td>
 
+          {_.range({x}).map(i =>
             <div>
               <td if={Math.floor(_index / 4) % 2 == 0} 
                 class='even'
@@ -36,6 +37,7 @@ view DrumPad {
                   {_index} 
               </td>
             </div>
+          )}
 
   			</tr>
   		</tbody>

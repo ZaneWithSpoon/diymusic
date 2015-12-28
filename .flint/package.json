@@ -6,11 +6,6 @@
   "version": "1.0.0",
   "main": "",
   "scripts": {},
-  "dependencies": {
-    "fs": "0.0.2",
-    "js-beautify": "^1.5.10",
-    "walk": "^2.3.9",
-    "xmlhttprequest": "^1.8.0"
-  },
+  "dependencies": {},
   "installed": []
 }
