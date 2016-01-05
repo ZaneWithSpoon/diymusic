@@ -20,32 +20,16 @@ view Main {
   }
 
 
-//loading midi.js
-// window.onload = function () {
-//   MIDI.loadPlugin({
-//     soundfontUrl: "./MIDI.js-master/examples/soundfont/",
-//     instrument: "acoustic_grand_piano",
-//     onprogress: function(state, progress) {
-//       console.log(state, progress);
-//     },
-//     onsuccess: function() {
-//       var delay = 0; // play one note every quarter second
-//       var note = 50; // the MIDI note
-//       var velocity = 127; // how hard the note hits
-//       // play the note
-//     }
-//   });
-// };
 
 //play-pause-stop buttons
 function playButton(){
   console.log('play')
   playing = true
 
-  // MIDI.setVolume(0, 127);
-  // MIDI.noteOn(0, 60, 127, 0);
-  // MIDI.noteOff(0, 60, 0 + 0.75);
-  // playing = false
+  MIDI.setVolume(0, 127);
+  MIDI.noteOn(0, 60, 127, 0);
+  MIDI.noteOff(0, 60, 0 + 0.75);
+  playing = false
 }
 function pauseButton(){
   console.log('pause')

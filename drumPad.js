@@ -1,72 +1,61 @@
+import lodash from 'lodash';
+
+
 view DrumPad {
 
-  require(['lodash'], function(_) {});
 
   let currentInstruments = ['kick', 'snare', 'tom', 'hat']
   let x = view.props.measures * view.props.ts.top
-
-
+  let looping = _.range(x)
 
   function oddClick(e) {
-    console.log(e);
+    console.log(e)
   }
   function evenClick(e) {
-    console.log(e);
+    console.log(e)
   }
 
 
   <drumPad>
-  	<title>
-  		Drum pad
-  	</title>
-  	<table>
-  		<tbody>
-  			<tr repeat={currentInstruments} >
-          <td> {_} </td>
+    <title>
+      Drum pad
+    </title>
+   <table>
+     <tbody>
+       <tr repeat={currentInstruments} >
+          <td class='instruments'> {_} </td>
 
-          {_.range({x}).map(i =>
-            <div>
-              <td if={Math.floor(_index / 4) % 2 == 0} 
-                class='even'
-                onClick={evenClick}> 
-                  {_index} 
-              </td>
-              <td if={Math.floor(_index / 4) % 2 == 1} 
-                class='odd'
-                onClick={oddClick}> 
-                  {_index} 
-              </td>
-            </div>
+         {looping.map(i =>
+            <td key = {i}> 
+              <ClickableSquare instrument={_} index={i} />
+            </td>
           )}
 
-  			</tr>
-  		</tbody>
-  	</table>
+       </tr>
+     </tbody>
+   </table>
   </drumPad>
 
 
-  $tr = {
-    width: 600
+  $table = {
+    borderSpacing: 0,
+    marginLeft: 10,
+
+    width: '98%'
   }
 
-  $td = { 
-    margin: 0,
-    width: 40,
-    height: 25,
+  $instruments = { 
     border: 'solid',
     borderWidth: 1,
-    borderRadius: 2
+    width: 60
   }
 
-  $measures = {
-    float: 'left'
+  $td = {
+    padding: 0
   }
 
-  $even = {
-    background: 'darkGray'
+  $tr = {
+    padding: 0
   }
 
-  $odd = {
-    background: 'gray'
-  }
 }

@@ -6,6 +6,8 @@
   "version": "1.0.0",
   "main": "",
   "scripts": {},
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "^3.10.1"
+  },
   "installed": []
 }
