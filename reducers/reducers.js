@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux'
-import { ADD_BEAT_HYPERMESURE, ADD_BEAT_NOTE, SET_RUN_STATE, RunStates } from '../actions/actions'
-const { SHOW_ALL } = VisibilityFilters
+import { ADD_BEAT_HYPERMEASURE, ADD_BEAT_NOTE, SET_RUN_STATE, RunStates } from '../actions/actions'
+const { STOPPED } = RunStates
 
+//reducer functions
 function runState(state = STOPPED, action) {
 
   switch (action.type) {
@@ -16,32 +17,32 @@ function runState(state = STOPPED, action) {
 function hypermeasures(state = [], action) {
 
   switch (action.type) {
-    case ADD_BEAT_HYPERMESURE:
+    case ADD_BEAT_HYPERMEASURE:
       //creating empty array of arrays (2d matrix)
-      var empty = new Array[16]
+      var empty = new Array
       for(i = 0; i < 16; i++){
-        empty[i] = {}
+        empty.push(new Array)
       }
-
-      //generating a unique ID for this Hypemeasure
-      var ID = function () {
-        return '_' + Math.random().toString(36).substr(2, 9);
-      };
 
       return [
         ...state,
         {
+          id: action.id,
           beatOrMelody: 'BEAT',
           instruments: ['kick', 'snare', 'tom', 'hat'],
           notes: empty
         }
       ]
-
+      break
 
     case ADD_BEAT_NOTE:
       //getting index of hypermeasure by id
-      var index = state.map(function(x) {return x.id; }).indexOf(action.id)
+      console.log(state)
+      var thing = state.map(function(x) {console.log(x); return x.id; })
+      console.log(thing)
+      var index = thing.indexOf(action.id)
 
+      console.log(index)
       //creating new array to replace state[index]notes
       var notes = state[index].notes
       notes[action.beat].push(
@@ -54,18 +55,17 @@ function hypermeasures(state = [], action) {
         }),
         ...state.slice(index + 1)
       ]
+      break
 
-      default:
-        return state
+    default:
+      return state
   }
 }
-
-
 
 const diymApp = combineReducers({
   runState,
   hypermeasures
 })
 
-export default diymApp
 
+export default diymApp

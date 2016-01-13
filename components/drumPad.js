@@ -27,7 +27,7 @@ view DrumPad {
 
          {looping.map(i =>
             <td key = {i}> 
-              <ClickableSquare instrument={_} index={i} />
+              <ClickableSquare instrument={_} index={i} id={view.props.id}/>
             </td>
           )}
 

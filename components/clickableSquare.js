@@ -1,3 +1,6 @@
+import { addBeatHypermeasure, addBeatNote, setRunState, RunStates } from '../actions/actions'
+
+
 view ClickableSquare {
 
   let clicked = false
@@ -26,9 +29,11 @@ view ClickableSquare {
       //this.props.removeNote(this.state.x, this.state.y);
       clicked = false
     } else {
-      //this.props.addNote(this.state.x, this.state.y);
+      //TODO figure out how hypermeasure gets it's id
+      //store.dispatch(addBeatNote(view.props.id, view.props.instrument, view.props.index))
       clicked = true
     }
+    //console.log(store.getState())
     updateClassName()
   }
 

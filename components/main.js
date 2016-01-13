@@ -1,12 +1,17 @@
-import { createStore, combineReducers } from 'redux'
-import diymApp from '../reducers/reducers'
+//diym ( diy music ) built by Zane Witherspoon
+ 
 import { addBeatHypermeasure, addBeatNote, setRunState, RunStates } from '../actions/actions'
+import { connect } from 'react-redux'
 
-let store = createStore(diymApp)
 
-console.log(store.getState())
-
+//main.js 
 view Main {
+
+  const { dispatch, runState } = view.props
+  
+  let id = dispatch(addBeatHypermeasure())
+  //let id = 'afs'
+
 
   let bpm = 120
   let speed = 60000/bpm
@@ -15,7 +20,6 @@ view Main {
   let ts = {top: 4,
             bottom: 4}
 
-  let matrix = []
 
   let measures = 4;
   let octaves = 1;
@@ -23,28 +27,21 @@ view Main {
   let ySquares = (octaves * 12) + 1
 
 
-  for (var b = 0; b < xSquares; b++) {
-    matrix[b] = [];
-  }
-
-
-
 //play-pause-stop buttons
 function playButton(){
-  console.log('play')
+  console.log('playING')
+  //store.dispatch(setRunState('PLAYING'))
   playing = true
 
-  MIDI.setVolume(0, 127);
-  MIDI.noteOn(0, 60, 127, 0);
-  MIDI.noteOff(0, 60, 0 + 0.75);
-  playing = false
 }
 function pauseButton(){
-  console.log('pause')
+  console.log('pauseED')
+  //store.dispatch(setRunState('PAUSED'))
   playing = false
 }
 function stopButton(){
-  console.log('stop')
+  console.log('stopjlaflsk')
+  //store.dispatch(setRunState('STOPPED'))
   playing = false
 }
 
@@ -65,7 +62,7 @@ function toggleRepeat() {
   repeating = !repeating
   console.log(repeating)
 }
-
+ 
   <app>
       <Header 
         bpm={bpm} 
@@ -83,6 +80,7 @@ function toggleRepeat() {
       <Browser />
 
       <DrumPad 
+        id = {id}
         speed={speed}
         repeating={repeating}
         ts={ts}
@@ -93,20 +91,35 @@ function toggleRepeat() {
 
   $app = {
     height: 80,
-    background: 'blue'
+    background: '#33cccc'
   }
   $Header = {
     marginBottom: 15
   }
+
   $Browser = {
     marginRight: 150,
     width: 150,
     height: 1000,
     position: 'fixed',
-    background: 'lightBlue'
+    background: '#E49595'
 
   }
   $DrumPad = {
     marginLeft: 150
   }
 }
+
+Main.propTypes = {
+  runState: propTypes.oneOf([
+    'PLAYING',
+    'PAUSED',
+    'STOPPED'
+  ]).isRequired
+}
+
+function select(state) {
+  return { runState: state.runState }
+}
+
+export default connect(select)(Main)
