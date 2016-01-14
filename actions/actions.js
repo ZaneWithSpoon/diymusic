@@ -21,13 +21,10 @@ export const RunStates = {
  */
 function addBeatHypermeasureId(id) {
   console.log(id)
-  return {
-    type: ADD_BEAT_HYPERMEASURE,
-    id: id
-  }
+  return { type: ADD_BEAT_HYPERMEASURE, id }
 }
 
-export function addBeatHypermeasure() {
+export const addBeatHypermeasure = () => {
   return dispatch => {
     //generating a unique ID for this Hypemeasure
     let id = Math.random().toString(36).substr(2, 9)
@@ -36,16 +33,10 @@ export function addBeatHypermeasure() {
   }
 }
 
-export function addBeatNote(id, instrument, beat ) {
-  return { 
-    type: ADD_BEAT_NOTE, 
-    id: id,
-    instrument: instrument,
-    beat: beat
-  }
-}
+export const addBeatNote = (id, instrument, beat) => ({
+  type: ADD_BEAT_NOTE, id, instrument, beat
+})
 
-export function setRunState(state) {
-  console.log(state)
-  return { type: SET_RUN_STATE, state }
-}
+export const setRunState = state => ({
+  type: SET_RUN_STATE, state
+})

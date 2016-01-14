@@ -1,20 +1,16 @@
-import lodash from 'lodash';
-
+import { range } from 'lodash';
 
 view DrumPad {
-
+  prop measures
+  prop ts
+  prop id
 
   let currentInstruments = ['kick', 'snare', 'tom', 'hat']
-  let x = view.props.measures * view.props.ts.top
-  let looping = _.range(x)
+  let x = measures * ts.top
+  let looping = range(x)
 
-  function oddClick(e) {
-    console.log(e)
-  }
-  function evenClick(e) {
-    console.log(e)
-  }
-
+  function oddClick(e) { console.log(e) }
+  function evenClick(e) { console.log(e) }
 
   <drumPad>
     <title>
@@ -23,14 +19,12 @@ view DrumPad {
    <table>
      <tbody>
        <tr repeat={currentInstruments} >
-          <td class='instruments'> {_} </td>
-
+         <td class='instruments'> {_} </td>
          {looping.map(i =>
-            <td key = {i}> 
-              <ClickableSquare instrument={_} index={i} id={view.props.id}/>
+            <td key = {i}>
+              <ClickableSquare instrument={_} index={i} id={id}/>
             </td>
           )}
-
        </tr>
      </tbody>
    </table>
@@ -40,11 +34,10 @@ view DrumPad {
   $table = {
     borderSpacing: 0,
     marginLeft: 10,
-
     width: '98%'
   }
 
-  $instruments = { 
+  $instruments = {
     border: 'solid',
     borderWidth: 1,
     width: 60
@@ -57,5 +50,4 @@ view DrumPad {
   $tr = {
     padding: 0
   }
-
 }

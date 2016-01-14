@@ -1,33 +1,20 @@
 view Header {
+  prop onChangeBpm
+  prop onUpdateTs
+  prop ts
+  prop playing
+  prop onPause
+  prop onStop
+  prop onToggleRepeat
+  prop onPlay
+  prop bpm
 
   let newBpm = 0
-  // let newTs = {top: view.props.ts.top,
-  //               bottom: view.props.ts.bottom}
-  let newTsT = 0
-  let newTsB = 0
-  let newTs = {top: 0, bottom: 0}
+  let newTs = { top: ts.top, bottom: ts.bottom }
 
-
-
-
-
-  function changeBpm() {
-    view.props.changeBpm(newBpm)
-  }
   function updateTs() {
-    if(newTsT == 0){
-      newTs.top = view.props.ts.top
-    } else {
-      newTs.top = newTsT
-    }
-    if(newTsB == 0){
-      newTs.bottom = view.props.ts.bottom
-    } else {
-      newTs.bottom = newTsB
-    }
-
-    view.props.updateTs(newTs)
-
+    // + to cast string to int
+    onUpdateTs({ top: +newTs.top, bottom: +newTs.bottom })
   }
 
   <header>
@@ -36,19 +23,16 @@ view Header {
     </box>
     <box>
       <li>
-        <button if={!view.props.playing} onClick={view.props.play}> play </button> 
-        <button if={view.props.playing} onClick={view.props.pause}> pause </button> 
-        <button onClick={view.props.stop}> stop </button> 
+        <button if={!playing} onClick={onPlay}>play</button>
+        <button if={playing} onClick={onPause}>pause</button>
+        <button onClick={onStop}>stop</button>
       </li>
-      <button class='checkbox' onClick={view.props.toggleRepeat} /> Repeat
+      <button class='checkbox' onClick={onToggleRepeat} /> Repeat
     </box>
     <box>
-      <bpm>bpm: {view.props.bpm}</bpm>
-    	<bpm>bpm: 
-    		<input 
-    			placeholder={view.props.bpm} 
-    			sync={newBpm}
-    			onEnter={changeBpm} />
+      <bpm>bpm: {bpm}</bpm>
+    	<bpm>bpm:
+    		<input placeholder={bpm} sync={newBpm} onEnter={() => onChangeBpm(+newBpm)} />
     	</bpm>
       <newBpm>New BPM: {newBpm}</newBpm>
     </box>
@@ -56,32 +40,24 @@ view Header {
       Time Signiature:
     </box>
     <box>
-      <ts>{view.props.ts.top}</ts>
-      <ts>{view.props.ts.bottom}</ts>
+      <ts>{ts.top}</ts>
+      <ts>{ts.bottom}</ts>
     </box>
     <box>
       <ts>
-        <input 
-          placeholder={view.props.ts.top} 
-          sync={newTsT}
-          onEnter={updateTs} />
+        <input placeholder={ts.top} sync={newTs.top} onEnter={updateTs} />
       </ts>
       <ts>
-        <input 
-          placeholder={view.props.ts.bottom} 
-          sync={newTsB}
-          onEnter={updateTs} />
+        <input placeholder={ts.bottom} sync={newTs.bottom} onEnter={updateTs} />
       </ts>
     </box>
     <boxNoFloat>
       New TS
-      <ts>{newTsT}</ts>
-      <ts>{newTsB}</ts>
+      <ts>{newTs.top}</ts>
+      <ts>{newTs.bottom}</ts>
     </boxNoFloat>
   </header>
 
-  
   $title = { fontSize: 40 }
-  $box = { float: 'left',
-            margin: 10 }
+  $box = { float: 'left', margin: 10 }
 }
