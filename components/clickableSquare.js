@@ -1,49 +1,23 @@
 import { addBeatHypermeasure, addBeatNote, setRunState, RunStates } from '../actions/actions'
 
+function getClass(index) {
+  const odd = Math.floor(index / 4) % 2 == 0
+  return odd ? 'odd' : 'even'
+}
 
 view ClickableSquare {
-
-  let clicked = false
-  let className = ''
-
-  function updateClassName() {
-    if(Math.floor(view.props.index / 4) % 2 == 0 ){
-      if(clicked){
-        className = 'clicked'
-      } else {
-        className = 'even'
-      }
-    } else {
-      if(clicked){
-        className = 'clicked'
-      } else {
-        className = 'odd'
-      }
-    }
-  }
-
+  prop index
+  let active = false
 
   //todo: use redux to change playable music state
-  function toggleSelected() {
-    if(clicked){
-      //this.props.removeNote(this.state.x, this.state.y);
-      clicked = false
-    } else {
-      //TODO figure out how hypermeasure gets it's id
-      //store.dispatch(addBeatNote(view.props.id, view.props.instrument, view.props.index))
-      clicked = true
-    }
-    //console.log(store.getState())
-    updateClassName()
+  function toggleActive() {
+    active = !active
+    //this.props.removeNote(this.state.x, this.state.y);
+    //TODO figure out how hypermeasure gets it's id
+    //store.dispatch(addBeatNote(view.props.id, view.props.instrument, view.props.index))
   }
 
-
-  updateClassName()
-
-
-
-  <block class={className} onClick={toggleSelected} ></block>
-
+  <block class={active ? 'clicked' : getClass(index)} onClick={toggleActive} />
 
   $even = {
     background: 'darkGray'
