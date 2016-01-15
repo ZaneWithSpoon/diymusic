@@ -1,15 +1,26 @@
 //diym ( diy music ) built by Zane Witherspoon
 
-import { addBeatHypermeasure, addBeatNote, setRunState, RunStates } from '../actions/actions'
+import { addBeatHypermeasure, addBeatNote, removeBeatNote, setRunState, RunStates } from '../actions/actions'
+import { createStore, applyMiddleware } from 'redux'
 import { connect } from 'react-redux'
+import thunkMiddleware from 'redux-thunk'
+import createLogger from 'redux-logger'
+import { diymApp } from '../reducers/reducers'
+
+const loggerMiddleware = createLogger()
+
+const createStoreWithMiddleware = applyMiddleware(
+  thunkMiddleware, // lets us dispatch() functions
+  loggerMiddleware // neat middleware that logs actions
+)(createStore)
+
+const store = createStoreWithMiddleware(diymApp)
+
 
 //main.js
 view Main {
-  // const { dispatch, runState } = view.props
 
-  // let id = dispatch(addBeatHypermeasure())
-  //let id = 'afs'
-  let id = 'afs'
+  let id = store.dispatch(addBeatHypermeasure())
   let bpm = 120
   let speed = 60000/bpm
   let repeating = false
@@ -24,20 +35,17 @@ view Main {
 
   //play-pause-stop buttons
   function onPlay(){
-    console.log('playING')
-    //store.dispatch(setRunState('PLAYING'))
+    store.dispatch(setRunState('PLAYING'))
     playing = true
   }
 
   function onPause(){
-    console.log('pauseED')
-    //store.dispatch(setRunState('PAUSED'))
+    store.dispatch(setRunState('PAUSED'))
     playing = false
   }
 
   function onStop(){
-    console.log('stopjlaflsk')
-    //store.dispatch(setRunState('STOPPED'))
+    store.dispatch(setRunState('STOPPED'))
     playing = false
   }
 
@@ -60,19 +68,19 @@ view Main {
   }
 
   <Header {...{
-    bpm, speed, ts, repeating, playing,
+    store, bpm, speed, ts, repeating, playing,
     onUpdateTs, onToggleRepeat, onChangeBpm,
     onPlay, onPause, onStop
   }} />
   <Browser />
   <DrumPad {...{
-    id, speed, repeating,
+    store, id, speed, repeating,
     ts, measures, xSquares, ySquares
   }} />
 
   $ = {
     height: 80,
-    background: '#33cccc'
+    background: '#1CCAD8'
   }
 
   $Header = {
@@ -84,7 +92,7 @@ view Main {
     width: 150,
     height: 1000,
     position: 'fixed',
-    background: '#E49595'
+    background: '#E01A4F'
   }
 
   $DrumPad = {

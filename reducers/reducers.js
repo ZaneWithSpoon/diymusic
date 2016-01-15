@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
-import { ADD_BEAT_HYPERMEASURE, ADD_BEAT_NOTE, SET_RUN_STATE, RunStates } from '../actions/actions'
+import { ADD_BEAT_HYPERMEASURE, REMOVE_BEAT_NOTE, ADD_BEAT_NOTE, SET_RUN_STATE, RunStates } from '../actions/actions'
+import sugar from 'sugar'
 const { STOPPED } = RunStates
 
 //reducer functions
@@ -36,13 +37,9 @@ function hypermeasures(state = [], action) {
       break
 
     case ADD_BEAT_NOTE:
-      //getting index of hypermeasure by id
-      console.log(state)
-      var thing = state.map(function(x) {console.log(x); return x.id; })
-      console.log(thing)
+      var thing = state.map(function(x) { return x.id })
       var index = thing.indexOf(action.id)
 
-      console.log(index)
       //creating new array to replace state[index]notes
       var notes = state[index].notes
       notes[action.beat].push(
@@ -57,15 +54,31 @@ function hypermeasures(state = [], action) {
       ]
       break
 
+    case REMOVE_BEAT_NOTE:
+      var thing = state.map(function(x) { return x.id })
+      var index = thing.indexOf(action.id)
+
+      //creating new array to replace state[index]notes
+      var notes = state[index].notes
+      notes[action.beat].remove(
+        state[index].instruments.indexOf(action.instrument))
+
+      return [
+        ...state.slice(0, index),
+        Object.assign({}, state[index], {
+          notes: notes
+        }),
+        ...state.slice(index + 1)
+      ]
+      break 
+
+
     default:
       return state
   }
 }
 
-const diymApp = combineReducers({
+export const diymApp = combineReducers({
   runState,
   hypermeasures
 })
-
-
-export default diymApp

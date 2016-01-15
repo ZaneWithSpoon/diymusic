@@ -1,4 +1,4 @@
-import { addBeatHypermeasure, addBeatNote, setRunState, RunStates } from '../actions/actions'
+import { addBeatNote, removeBeatNote } from '../actions/actions'
 
 function getClass(index) {
   const odd = Math.floor(index / 4) % 2 == 0
@@ -6,15 +6,20 @@ function getClass(index) {
 }
 
 view ClickableSquare {
+  prop id
   prop index
+  prop instrument
+  prop store
   let active = false
 
   //todo: use redux to change playable music state
   function toggleActive() {
+    if(!active)
+      store.dispatch(addBeatNote(id, instrument, index))
+    else
+      store.dispatch(removeBeatNote(id, instrument, index))
+
     active = !active
-    //this.props.removeNote(this.state.x, this.state.y);
-    //TODO figure out how hypermeasure gets it's id
-    //store.dispatch(addBeatNote(view.props.id, view.props.instrument, view.props.index))
   }
 
   <block class={active ? 'clicked' : getClass(index)} onClick={toggleActive} />

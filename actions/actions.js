@@ -4,6 +4,7 @@
 
 export const ADD_BEAT_HYPERMEASURE = 'ADD_BEAT_HYPERMEASURE'
 export const ADD_BEAT_NOTE = 'ADD_BEAT_NOTE'
+export const REMOVE_BEAT_NOTE = 'REMOVE_BEAT_NOTE'
 export const SET_RUN_STATE = 'SET_RUN_STATE'
 
 /*
@@ -20,7 +21,6 @@ export const RunStates = {
  * action creators
  */
 function addBeatHypermeasureId(id) {
-  console.log(id)
   return { type: ADD_BEAT_HYPERMEASURE, id }
 }
 
@@ -35,6 +35,10 @@ export const addBeatHypermeasure = () => {
 
 export const addBeatNote = (id, instrument, beat) => ({
   type: ADD_BEAT_NOTE, id, instrument, beat
+})
+
+export const removeBeatNote = (id, instrument, beat) => ({
+  type: REMOVE_BEAT_NOTE, id, instrument, beat
 })
 
 export const setRunState = state => ({

@@ -1,6 +1,7 @@
 import { range } from 'lodash';
 
 view DrumPad {
+  prop store
   prop measures
   prop ts
   prop id
@@ -22,7 +23,7 @@ view DrumPad {
          <td class='instruments'> {_} </td>
          {looping.map(i =>
             <td key = {i}>
-              <ClickableSquare instrument={_} index={i} id={id}/>
+              <ClickableSquare store={store} instrument={_} index={i} id={id}/>
             </td>
           )}
        </tr>
