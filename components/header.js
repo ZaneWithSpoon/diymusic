@@ -2,7 +2,7 @@ view Header {
   prop onChangeBpm
   prop onUpdateTs
   prop ts
-  prop playing
+  prop runState
   prop onPause
   prop onStop
   prop onToggleRepeat
@@ -23,8 +23,8 @@ view Header {
     </box>
     <box>
       <li>
-        <button if={!playing} onClick={onPlay}>play</button>
-        <button if={playing} onClick={onPause}>pause</button>
+        <button if={runState != 'PLAYING'} onClick={onPlay}>play</button>
+        <button if={runState == 'PLAYING'} onClick={onPause}>pause</button>
         <button onClick={onStop}>stop</button>
       </li>
       <button class='checkbox' onClick={onToggleRepeat} /> Repeat

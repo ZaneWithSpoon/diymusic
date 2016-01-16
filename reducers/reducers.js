@@ -15,6 +15,17 @@ function runState(state = STOPPED, action) {
   }
 }
 
+function repeat(state = false, action) {
+
+  switch (action.type) {
+    case 'TOGGLE_REPEAT':
+      return !state
+
+    default:
+      return state
+  }
+}
+
 function hypermeasures(state = [], action) {
 
   switch (action.type) {
@@ -25,10 +36,30 @@ function hypermeasures(state = [], action) {
         empty.push(new Array)
       }
 
+      //to make a more interesting start
+      empty[0].push('kick')
+      empty[1].push('hat')
+      empty[2].push('snare')
+      empty[3].push('hat')
+      empty[4].push('kick')
+      empty[5].push('hat')
+      empty[6].push('snare')
+      empty[6].push('tom')
+      empty[8].push('kick')
+      empty[9].push('hat')
+      empty[10].push('snare')
+      empty[11].push('hat')
+      empty[12].push('kick')
+      empty[13].push('hat')
+      empty[14].push('snare')
+      empty[14].push('tom')
+      empty[15].push('hat')
+
       return [
         ...state,
         {
           id: action.id,
+          size: 16,
           beatOrMelody: 'BEAT',
           instruments: ['kick', 'snare', 'tom', 'hat'],
           notes: empty
@@ -42,8 +73,7 @@ function hypermeasures(state = [], action) {
 
       //creating new array to replace state[index]notes
       var notes = state[index].notes
-      notes[action.beat].push(
-        state[index].instruments.indexOf(action.instrument))
+      notes[action.beat].push(action.instrument)
 
       return [
         ...state.slice(0, index),
@@ -60,8 +90,7 @@ function hypermeasures(state = [], action) {
 
       //creating new array to replace state[index]notes
       var notes = state[index].notes
-      notes[action.beat].remove(
-        state[index].instruments.indexOf(action.instrument))
+      notes[action.beat].remove(action.instrument)
 
       return [
         ...state.slice(0, index),
@@ -80,5 +109,6 @@ function hypermeasures(state = [], action) {
 
 export const diymApp = combineReducers({
   runState,
+  repeat,
   hypermeasures
 })

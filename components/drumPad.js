@@ -5,13 +5,12 @@ view DrumPad {
   prop measures
   prop ts
   prop id
+  prop playPrecussion
+  prop playingBeat
 
   let currentInstruments = ['kick', 'snare', 'tom', 'hat']
   let x = measures * ts.top
   let looping = range(x)
-
-  function oddClick(e) { console.log(e) }
-  function evenClick(e) { console.log(e) }
 
   <drumPad>
     <title>
@@ -20,10 +19,10 @@ view DrumPad {
    <table>
      <tbody>
        <tr repeat={currentInstruments} >
-         <td class='instruments'> {_} </td>
+         <td class='instruments' onClick={() => playPrecussion(_) }> {_} </td>
          {looping.map(i =>
             <td key = {i}>
-              <ClickableSquare store={store} instrument={_} index={i} id={id}/>
+              <ClickableSquare playingBeat={playingBeat} store={store} instrument={_} index={i} id={id}/>
             </td>
           )}
        </tr>

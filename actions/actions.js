@@ -44,3 +44,14 @@ export const removeBeatNote = (id, instrument, beat) => ({
 export const setRunState = state => ({
   type: SET_RUN_STATE, state
 })
+
+export const toggleRepeat = () => ({
+  type: 'TOGGLE_REPEAT'
+})
+
+export const updateBpm = newBpm => ({
+  type: 'UPDATE_BPM', newBpm
+})
+
+
+
