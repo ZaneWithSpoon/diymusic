@@ -7,6 +7,7 @@ view DrumPad {
   prop id
   prop playPrecussion
   prop playingBeat
+  prop switchToStudio
 
   let currentInstruments = ['kick', 'snare', 'tom', 'hat']
   let x = measures * ts.top
@@ -14,8 +15,11 @@ view DrumPad {
 
   <drumPad>
     <title>
-      Drum pad
+      Name
     </title>
+    <back  onClick={switchToStudio}>
+      back
+    </back>
    <table>
      <tbody>
        <tr repeat={currentInstruments} >

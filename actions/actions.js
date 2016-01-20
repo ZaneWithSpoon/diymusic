@@ -53,5 +53,3 @@ export const updateBpm = newBpm => ({
   type: 'UPDATE_BPM', newBpm
 })
 
-
-

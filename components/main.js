@@ -8,7 +8,6 @@ import createLogger from 'redux-logger'
 import { diymApp } from '../reducers/reducers'
 import Soundfont from 'soundfont-player'
 
-
 const loggerMiddleware = createLogger()
 
 const createStoreWithMiddleware = applyMiddleware(
@@ -22,33 +21,6 @@ const store = createStoreWithMiddleware(diymApp)
 let request = new XMLHttpRequest()
 let ctx = new AudioContext()
 
-function loadAudio(object, url) {
-
-    var request = new XMLHttpRequest();
-    request.open('GET', url, true);
-    request.responseType = 'arraybuffer';
-
-    request.onload = function() {
-        ctx.decodeAudioData(request.response, function(buffer) {
-            object.buffer = buffer;
-        });
-    }
-    request.send();
-}
-
-function playPrecussion(instrument) {
-  //Create the audio buffer source Node
-  let sourceBuffer = ctx.createBufferSource()
-
-  let url = '../sounds/' + instrument + '.wav'
-
-  loadAudio(sourceBuffer, url)
-  sourceBuffer.connect(ctx.destination)
-  sourceBuffer.start(0)
-
-}
-
-
 
 let soundfont = new Soundfont(ctx)
 
@@ -58,10 +30,12 @@ inst.onready(function() {
 })
 
 
+
 //main.js
 view Main {
 
-  let id = store.dispatch(addBeatHypermeasure())
+  //Defning default variables
+  let tempId = store.dispatch(addBeatHypermeasure())
   let bpm = 120
   let speed = 60000/bpm
   let repeating = false
@@ -76,6 +50,17 @@ view Main {
   let playingBeat = -1
   let beatWait = []
 
+  let viewing = 'tl'
+  let id = ''
+
+  let instrumentPanelData = [ 
+  {instrument:'drums', loops: [tempId]}, 
+  {instrument:'piano', loops: []},
+  {instrument:'synth', loops: []},]
+
+
+  //Key command functions
+
   on.keydown((e) => {
     console.log(e.keyCode)
     if(e.keyCode === 32){
@@ -86,8 +71,39 @@ view Main {
       } else {
         onPlay()
       }
+    } else if (e.keycode <= 48 && e.keyCode >= 57){
+      //instruments = store.getState().
     }
   })
+
+
+  //Playing Audio Functions
+
+  function loadAudio(object, url) {
+
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.responseType = 'arraybuffer';
+
+    request.onload = function() {
+      ctx.decodeAudioData(request.response, function(buffer) {
+        object.buffer = buffer;
+      });
+    }
+    request.send();
+  }
+
+  function playPrecussion(instrument) {
+    //Create the audio buffer source Node
+    let sourceBuffer = ctx.createBufferSource()
+
+    let url = '../sounds/' + instrument + '.wav'
+
+    loadAudio(sourceBuffer, url)
+    sourceBuffer.connect(ctx.destination)
+    sourceBuffer.start(0)
+
+  }
 
   function stop() {
     for(i = 0; i < beatWait.length; i++){
@@ -116,10 +132,8 @@ view Main {
   function renderAudio(i) {
 
     let notes = store.getState().hypermeasures[0].notes[i]
-
     // console.log(i)
     // console.log(notes)
-
     notes.map(instrument => {
       playPrecussion(instrument)
     })
@@ -180,36 +194,58 @@ view Main {
     repeating = !repeating
   }
 
+  function switchToDrumpad(newId) {
+    console.log(newId)
+    id = newId
+    viewing = 'dp'
+  }
+
+  function switchToStudio() {
+    viewing = 'tl'
+  }
+
+
+  //JSX
+
   <Header {...{
     store, bpm, speed, ts, repeating, runState,
     onUpdateTs, onToggleRepeat, onChangeBpm,
     onPlay, onPause, onStop, repeating
   }} />
-  <Browser />
-  <DrumPad {...{
+  <Studio if={viewing == 'tl'} {...{
+    instrumentPanelData, switchToDrumpad
+  }} />
+  <DrumPad if={viewing == 'dp'}{...{
     store, id, speed, repeating, playPrecussion,
-    ts, measures, xSquares, ySquares, playingBeat
+    ts, measures, xSquares, ySquares, playingBeat,
+    switchToStudio
   }} />
 
-  $ = {
+
+  //Style
+
+  $Header = {
     height: 80,
     background: '#1CCAD8'
   }
 
-  $Header = {
-    height: 65,
-    marginBottom: 15
-  }
-
   $Browser = {
-    marginRight: 150,
     width: 150,
-    height: 1000,
+    height: window.innerHeight-100,
     position: 'fixed',
     background: '#E01A4F'
   }
 
   $DrumPad = {
-    marginLeft: 150
+    // background: '#0F1108',
+    // color: 'white'
+  }
+
+  $Studio = {
+    // background: '#0F1108',
+    // color: 'white',
+    float: 'left',
+    width: window.innerWidth,
+    height: window.innerHeight-100
   }
 }

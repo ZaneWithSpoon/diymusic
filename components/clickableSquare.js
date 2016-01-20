@@ -33,7 +33,7 @@ view ClickableSquare {
   }
 
   //todo: use redux to change playable music state
-  function toggleActive() {
+  function toggleActive(e) {
     if(!active)
       store.dispatch(addBeatNote(id, instrument, index))
     else

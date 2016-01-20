@@ -15,6 +15,23 @@ function runState(state = STOPPED, action) {
   }
 }
 
+function instrumentPanel(
+  state = [ 
+  {instrument:'drums', loops: []}, 
+  {instrument:'piano', loops: []},
+  {instrument:'synth', loops: []},], 
+  action) {
+
+  switch (action.type) {
+    case 'ADD_INSTRUMENT_LOOP':
+      return state
+
+    default:
+      return state
+  }
+
+}
+
 function repeat(state = false, action) {
 
   switch (action.type) {
@@ -109,6 +126,7 @@ function hypermeasures(state = [], action) {
 
 export const diymApp = combineReducers({
   runState,
+  instrumentPanel,
   repeat,
   hypermeasures
 })
