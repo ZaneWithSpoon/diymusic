@@ -1,6 +1,6 @@
 import { range } from 'lodash'
 
-view LiveTrack {
+view Timeline {
 
   let rows = Math.floor(window.innerHeight/100)
   let looping = range(40)

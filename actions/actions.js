@@ -1,55 +1,52 @@
 /*
- * action types
- */
-
-export const ADD_BEAT_HYPERMEASURE = 'ADD_BEAT_HYPERMEASURE'
-export const ADD_BEAT_NOTE = 'ADD_BEAT_NOTE'
-export const REMOVE_BEAT_NOTE = 'REMOVE_BEAT_NOTE'
-export const SET_RUN_STATE = 'SET_RUN_STATE'
-
-/*
- * other constants
- */
-
-export const RunStates = {
-  PLAYING: 'PLAYING',
-  PAUSED: 'PAUSED',
-  STOPPED: 'STOPPED'
-}
-
-/*
  * action creators
  */
-function addBeatHypermeasureId(id) {
-  return { type: ADD_BEAT_HYPERMEASURE, id }
+function addBeatHypermeasureId(id, name) {
+  return { type: 'ADD_BEAT_HYPERMEASURE', id, name }
+}
+
+function addPremadeBeatHypermeasureId(id) {
+  return { type: 'ADD_PREMADE_BEAT_HYPERMEASURE', id }
 }
 
 export const addBeatHypermeasure = () => {
   return dispatch => {
     //generating a unique ID for this Hypemeasure
     let id = Math.random().toString(36).substr(2, 9)
-    dispatch(addBeatHypermeasureId(id))
+    let name = 'unnamed'
+    dispatch(addBeatHypermeasureId(id, name))
+    return {id, name}
+  }
+}
+
+export const addPremadeBeatHypermeasure = () => {
+  return dispatch => {
+    //generating a unique ID for this Hypemeasure
+    let id = Math.random().toString(36).substr(2, 9)
+    let name = 'premade'
+    dispatch(addPremadeBeatHypermeasureId(id))
+    dispatch(addInstrumentLoop(id, name, 'drums'))
     return id
   }
 }
 
 export const addBeatNote = (id, instrument, beat) => ({
-  type: ADD_BEAT_NOTE, id, instrument, beat
+  type: 'ADD_BEAT_NOTE', id, instrument, beat
 })
 
 export const removeBeatNote = (id, instrument, beat) => ({
-  type: REMOVE_BEAT_NOTE, id, instrument, beat
-})
-
-export const setRunState = state => ({
-  type: SET_RUN_STATE, state
-})
-
-export const toggleRepeat = () => ({
-  type: 'TOGGLE_REPEAT'
+  type: 'REMOVE_BEAT_NOTE', id, instrument, beat
 })
 
 export const updateBpm = newBpm => ({
   type: 'UPDATE_BPM', newBpm
+})
+
+export const addInstrument = (instrument) => ({
+  type:'ADD_INSTRUMENT', instrument
+})
+
+export const addInstrumentLoop = (id, name, instrument) => ({
+  type: 'ADD_INSTRUMENT_LOOP', id, name, instrument
 })
 

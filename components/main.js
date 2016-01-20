@@ -1,6 +1,6 @@
 //diym ( diy music ) built by Zane Witherspoon
 
-import { addBeatHypermeasure, addBeatNote, removeBeatNote, setRunState, toggleRepeat } from '../actions/actions'
+import { addPremadeBeatHypermeasure } from '../actions/actions'
 import { createStore, applyMiddleware } from 'redux'
 import { connect } from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
@@ -18,24 +18,25 @@ const createStoreWithMiddleware = applyMiddleware(
 const store = createStoreWithMiddleware(diymApp)
 
 
-let request = new XMLHttpRequest()
-let ctx = new AudioContext()
+const ctx = new AudioContext()
 
 
-let soundfont = new Soundfont(ctx)
+const soundfont = new Soundfont(ctx)
 
-let inst = soundfont.instrument('acoustic_grand_piano')
-inst.onready(function() {
-  inst.play('C4', 0)
-})
 
 
 
 //main.js
 view Main {
 
+  let inst = soundfont.instrument('acoustic_grand_piano')
+  inst.onready(function() {
+    inst.play('C4', 0)
+  })
+
+
   //Defning default variables
-  let tempId = store.dispatch(addBeatHypermeasure())
+  let tempId = store.dispatch(addPremadeBeatHypermeasure())
   let bpm = 120
   let speed = 60000/bpm
   let repeating = false
@@ -50,17 +51,10 @@ view Main {
   let playingBeat = -1
   let beatWait = []
 
-  let viewing = 'tl'
+  let viewState = 'tl'
   let id = ''
 
-  let instrumentPanelData = [ 
-  {instrument:'drums', loops: [tempId]}, 
-  {instrument:'piano', loops: []},
-  {instrument:'synth', loops: []},]
-
-
   //Key command functions
-
   on.keydown((e) => {
     console.log(e.keyCode)
     if(e.keyCode === 32){
@@ -78,7 +72,6 @@ view Main {
 
 
   //Playing Audio Functions
-
   function loadAudio(object, url) {
 
     var request = new XMLHttpRequest();
@@ -87,6 +80,7 @@ view Main {
 
     request.onload = function() {
       ctx.decodeAudioData(request.response, function(buffer) {
+        console.log(buffer)
         object.buffer = buffer;
       });
     }
@@ -101,8 +95,7 @@ view Main {
 
     loadAudio(sourceBuffer, url)
     sourceBuffer.connect(ctx.destination)
-    sourceBuffer.start(0)
-
+    sourceBuffer.start()
   }
 
   function stop() {
@@ -131,6 +124,7 @@ view Main {
 
   function renderAudio(i) {
 
+    //TODO : play focused hypermeasures
     let notes = store.getState().hypermeasures[0].notes[i]
     // console.log(i)
     // console.log(notes)
@@ -158,21 +152,23 @@ view Main {
   //play-pause-stop buttons
   function onPlay(){
     play()
-    store.dispatch(setRunState('PLAYING'))
     runState = 'PLAYING'
   }
 
   function onPause(){
     stop()
-    store.dispatch(setRunState('PAUSED'))
     runState = 'PAUSED'
   }
 
   function onStop(){
     stop()
-    store.dispatch(setRunState('STOPPED'))
     playingBeat = -1
     runState = 'STOPPED'
+
+    playPrecussion('hat')
+
+
+
   }
 
 
@@ -190,60 +186,37 @@ view Main {
   }
 
   function onToggleRepeat() {
-    store.dispatch(toggleRepeat())
     repeating = !repeating
-  }
-
-  function switchToDrumpad(newId) {
-    console.log(newId)
-    id = newId
-    viewing = 'dp'
-  }
-
-  function switchToStudio() {
-    viewing = 'tl'
   }
 
 
   //JSX
-
+  <test onClick={() => {    
+    //runState = 'STOPPED'
+    playPrecussion('hat')}
+  }> test </test>
   <Header {...{
     store, bpm, speed, ts, repeating, runState,
     onUpdateTs, onToggleRepeat, onChangeBpm,
     onPlay, onPause, onStop, repeating
   }} />
-  <Studio if={viewing == 'tl'} {...{
-    instrumentPanelData, switchToDrumpad
+  <Studio{...{
+    store, speed, repeating, playPrecussion,
+    playingBeat
   }} />
-  <DrumPad if={viewing == 'dp'}{...{
-    store, id, speed, repeating, playPrecussion,
-    ts, measures, xSquares, ySquares, playingBeat,
-    switchToStudio
-  }} />
+
 
 
   //Style
 
   $Header = {
     height: 80,
-    background: '#1CCAD8'
-  }
-
-  $Browser = {
-    width: 150,
-    height: window.innerHeight-100,
-    position: 'fixed',
-    background: '#E01A4F'
-  }
-
-  $DrumPad = {
-    // background: '#0F1108',
-    // color: 'white'
+    background: '#1CCAD8',
+    marginBottom: 0
   }
 
   $Studio = {
-    // background: '#0F1108',
-    // color: 'white',
+    marginTop: 0,
     float: 'left',
     width: window.innerWidth,
     height: window.innerHeight-100

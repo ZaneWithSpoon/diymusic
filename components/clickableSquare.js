@@ -7,20 +7,21 @@ view ClickableSquare {
   prop instrument
   prop store
   prop playingBeat
+  prop data
 
   let active = false
+  let indexArray = []
 
 
-  let thing = store.getState().hypermeasures.map(function(x) { return x.id })
-  let hmi = thing.indexOf(id)
-  let indexArray = store.getState().hypermeasures[hmi].notes[index]
-  
- // console.log(store.getState().hypermeasures[hmi].notes[index])
-  if(indexArray.none(instrument)){
-    active = false
-  } else {
-    active = true
-  }
+  on.props(() => {
+    indexArray = data.notes[index]
+    
+    if(indexArray.none(instrument)){
+      active = false
+    } else {
+      active = true
+    }
+  })
 
 
   function getClass(index) {
@@ -62,7 +63,7 @@ view ClickableSquare {
 
   $block = {
     margin: 0,
-    height: 25,
+    height: 50,
     border: 'solid',
     borderWidth: 1,
   }
