@@ -18,7 +18,7 @@ const createStoreWithMiddleware = applyMiddleware(
 const store = createStoreWithMiddleware(diymApp)
 
 
-const ctx = new AudioContext()
+const ctx = new (window.AudioContext || window.webkitAudioContext)
 
 
 const soundfont = new Soundfont(ctx)
@@ -72,19 +72,19 @@ view Main {
 
 
   //Playing Audio Functions
-  function loadAudio(object, url) {
+  function loadAudio(sourceBuffer, url) {
 
-    var request = new XMLHttpRequest();
-    request.open('GET', url, true);
-    request.responseType = 'arraybuffer';
+    var request = new XMLHttpRequest()
+    request.open('GET', url, true)
+    request.responseType = 'arraybuffer'
 
     request.onload = function() {
       ctx.decodeAudioData(request.response, function(buffer) {
         console.log(buffer)
-        object.buffer = buffer;
-      });
+        sourceBuffer.buffer = buffer
+      })
     }
-    request.send();
+    request.send()
   }
 
   function playPrecussion(instrument) {
@@ -95,13 +95,18 @@ view Main {
 
     loadAudio(sourceBuffer, url)
     sourceBuffer.connect(ctx.destination)
-    sourceBuffer.start()
+
+    //let runState = "plda"
+
+    //console.log(sourceBuffer)
+    sourceBuffer.start(0)
   }
 
   function stop() {
     for(i = 0; i < beatWait.length; i++){
       clearTimeout(beatWait[i])
     }
+    beatWait = []
   }
 
   function play() {
@@ -111,15 +116,6 @@ view Main {
     renderAudio(i)
     playingBeat++
     checkForRepeat(i)
-  }
-
-  function loadBeat(i) {
-    beatWait.push(waiting = setTimeout(function(){
-      renderAudio(i)
-      playingBeat++
-
-      checkForRepeat(i)
-    }, (speed)))
   }
 
   function renderAudio(i) {
@@ -132,6 +128,16 @@ view Main {
       playPrecussion(instrument)
     })
   }
+
+  function loadBeat(i) {
+    beatWait.push(waiting = setTimeout(function(){
+      renderAudio(i)
+      playingBeat++
+
+      checkForRepeat(i)
+    }, (speed)))
+  }
+
 
   function checkForRepeat(i) {
     if(i == (xSquares-1) && repeating){
@@ -161,14 +167,11 @@ view Main {
   }
 
   function onStop(){
-    stop()
-    playingBeat = -1
+    // stop()
+    // playingBeat = -1
     runState = 'STOPPED'
 
     playPrecussion('hat')
-
-
-
   }
 
 
@@ -189,12 +192,25 @@ view Main {
     repeating = !repeating
   }
 
+  let instrument = 'kick'
 
   //JSX
   <test onClick={() => {    
-    //runState = 'STOPPED'
-    playPrecussion('hat')}
-  }> test </test>
+    playPrecussion(instrument)}
+  }> test no var</test>
+  <test onClick={() => {    
+    runState = 'STOPPED'
+    playPrecussion(instrument)}
+  }> test redefine var </test>
+  <test onClick={() => {    
+    let run = 'STOPPED'
+    playPrecussion(instrument)}
+  }> test new var</test>
+
+
+
+
+
   <Header {...{
     store, bpm, speed, ts, repeating, runState,
     onUpdateTs, onToggleRepeat, onChangeBpm,
