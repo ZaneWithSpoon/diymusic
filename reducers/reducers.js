@@ -31,7 +31,6 @@ function instrumentPanel(
     default:
       return state
   }
-
 }
 
 function hypermeasures(state = [], action) {
@@ -44,24 +43,21 @@ function hypermeasures(state = [], action) {
         empty.push(new Array)
       }
 
-      //to make a more interesting start
+      //to make a more interesting start\
+
+      for(i = 0; i < 16; i++){
+        empty[i].push('hat')
+      }
+
       empty[0].push('kick')
-      empty[1].push('hat')
-      empty[2].push('snare')
-      empty[3].push('hat')
-      empty[4].push('kick')
-      empty[5].push('hat')
-      empty[6].push('snare')
-      empty[6].push('tom')
-      empty[8].push('kick')
-      empty[9].push('hat')
-      empty[10].push('snare')
-      empty[11].push('hat')
-      empty[12].push('kick')
-      empty[13].push('hat')
-      empty[14].push('snare')
-      empty[14].push('tom')
-      empty[15].push('hat')
+      empty[3].push('kick')
+      empty[7].push('kick')
+      empty[11].push('kick')
+      empty[14].push('kick')
+      empty[4].push('snare')
+      empty[12].push('snare')
+      empty[1].push('tom')
+      empty[9].push('tom')
 
       return [
         ...state,
@@ -73,6 +69,19 @@ function hypermeasures(state = [], action) {
           notes: empty,
           name: 'premade'
         }
+      ]
+      break
+
+    case 'UPDATE_HYPERMEASURE_NAME': 
+      var thing = state.map(function(x) { return x.id })
+      var index = thing.indexOf(action.id)
+
+      return [
+        ...state.slice(0, index),
+        Object.assign({}, state[index], {
+          notes: notes
+        }),
+        ...state.slice(index + 1)
       ]
       break
 

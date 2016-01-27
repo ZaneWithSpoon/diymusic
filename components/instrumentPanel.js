@@ -33,8 +33,6 @@ view InstrumentPanel {
     } else {
       console.log('else')
     }
-
-
   }
 
 
@@ -45,25 +43,24 @@ view InstrumentPanel {
     </back>
     <title>instrument panel </title>
     <table>
-      <thead>
-        <tr>
-          <td repeat = {currentInstruments}>
-            {_}
-          </td>
-        </tr>
-      </thead>
       <tbody>
-        <tr repeat={[0,1,2,3,4,5]} >
-          {instrumentPanelData.map(i =>
-            <td key={i.instrument}>
+        <tr repeat={instrumentPanelData} >
+          <td key={_.instrument}>{_.instrument}</td>
+          {_.loops.map(i =>
+            <td key={i.id} >
               <Hypermeasures 
-                loop={i.loops[_]}
-                instrument={i.instrument}
-                switchToDrumpad={switchToDrumpad}
-                addInstrumentLoop={addInstrumentLoop}
-                add/>
+                loop={i}
+                focus={() => {switchToDrumpad(i.id)}}
+                toggleChecked={() => {console.log('checked')}}
+                options={() => {console.log('options')}}
+                instrument={_.instrument}/>
             </td>
           )}
+          <td onClick={() => addInstrumentLoop(_.instrument)}>
+            <Hypermeasures
+              loop='undefined'
+              instrument={_.instrument}/>
+          </td>
         </tr>
       </tbody>
     </table>

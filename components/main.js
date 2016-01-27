@@ -1,6 +1,5 @@
 //diym ( diy music ) built by Zane Witherspoon
 
-import { addPremadeBeatHypermeasure } from '../actions/actions'
 import { createStore, applyMiddleware } from 'redux'
 import { connect } from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
@@ -9,7 +8,6 @@ import { diymApp } from '../reducers/reducers'
 import Soundfont from 'soundfont-player'
 
 const loggerMiddleware = createLogger()
-
 const createStoreWithMiddleware = applyMiddleware(
 //  loggerMiddleware, // neat middleware that logs actions
   thunkMiddleware // lets us dispatch() functions
@@ -17,10 +15,7 @@ const createStoreWithMiddleware = applyMiddleware(
 
 const store = createStoreWithMiddleware(diymApp)
 
-
 const ctx = new (window.AudioContext || window.webkitAudioContext)
-
-
 const soundfont = new Soundfont(ctx)
 
 
@@ -28,6 +23,7 @@ const soundfont = new Soundfont(ctx)
 
 //main.js
 view Main {
+  view.pause()
 
   let inst = soundfont.instrument('acoustic_grand_piano')
   inst.onready(function() {
@@ -36,32 +32,26 @@ view Main {
 
 
   //Defning default variables
-  let tempId = store.dispatch(addPremadeBeatHypermeasure())
   let bpm = 120
-  let speed = 60000/bpm
-  let repeating = false
+  let speed = 60000/bpm/2
+  let repeating = true
   let runState = 'STOPPED'
-  let ts = { top: 4, bottom: 4 }
+  let xSquares = 16
 
-  let measures = 4
-  let octaves = 1
-  let xSquares = ts.top * measures
-  let ySquares = (octaves * 12) + 1
 
   let playingBeat = -1
   let beatWait = []
 
   let viewState = 'tl'
-  let id = ''
 
   //Key command functions
   on.keydown((e) => {
-    console.log(e.keyCode)
+    //console.log(e.keyCode)
     if(e.keyCode === 32){
       e.preventDefault()
 
       if(runState == 'PLAYING'){
-        onPause()
+        onStop()
       } else {
         onPlay()
       }
@@ -74,13 +64,13 @@ view Main {
   //Playing Audio Functions
   function loadAudio(sourceBuffer, url) {
 
-    var request = new XMLHttpRequest()
+    let request = new XMLHttpRequest()
     request.open('GET', url, true)
     request.responseType = 'arraybuffer'
 
     request.onload = function() {
       ctx.decodeAudioData(request.response, function(buffer) {
-        console.log(buffer)
+        //console.log(buffer)
         sourceBuffer.buffer = buffer
       })
     }
@@ -95,11 +85,15 @@ view Main {
 
     loadAudio(sourceBuffer, url)
     sourceBuffer.connect(ctx.destination)
-
-    //let runState = "plda"
+    sourceBuffer.loop = false
 
     //console.log(sourceBuffer)
-    sourceBuffer.start(0)
+    setTimeout(() => {
+      sourceBuffer.start()  
+    })
+
+    // view.update()
+    
   }
 
   function stop() {
@@ -109,15 +103,22 @@ view Main {
     beatWait = []
   }
 
+  function updateLater() { setTimeout(() => view.update(),  10) }
   function play() {
 
     let i = playingBeat+1;
-
+    incrementPlayingBeat(i)
+    checkForRepeat(i)
+    updateLater()
+  }
+  // done because of likely bug in audio api
+  // where view.set overstimulates audio
+  // so temporarily turn off flint
+  function incrementPlayingBeat(i) {
     renderAudio(i)
     playingBeat++
-    checkForRepeat(i)
+    updateLater()
   }
-
   function renderAudio(i) {
 
     //TODO : play focused hypermeasures
@@ -130,12 +131,11 @@ view Main {
   }
 
   function loadBeat(i) {
-    beatWait.push(waiting = setTimeout(function(){
-      renderAudio(i)
-      playingBeat++
+    beatWait.push(waiting = setTimeout(() => {
+      incrementPlayingBeat(i)
 
       checkForRepeat(i)
-    }, (speed)))
+    }, speed))
   }
 
 
@@ -152,6 +152,7 @@ view Main {
     } else {
       loadBeat(i+1)
     }
+    updateLater()
   }
 
 
@@ -159,19 +160,22 @@ view Main {
   function onPlay(){
     play()
     runState = 'PLAYING'
+    updateLater()
   }
 
   function onPause(){
     stop()
     runState = 'PAUSED'
+    view.update()
   }
 
   function onStop(){
-    // stop()
-    // playingBeat = -1
+    stop()
+    playingBeat = -1
     runState = 'STOPPED'
 
-    playPrecussion('hat')
+    //playPrecussion('hat')
+    view.update()
   }
 
 
@@ -179,44 +183,29 @@ view Main {
   function onChangeBpm(newBpm) {
     console.log('changed bpm in func')
     bpm = newBpm
-    speed = 60000 / bpm
+    speed = 60000 / bpm /Z
+    view.update()
   }
 
   function onUpdateTs(newTs) {
     console.log('new ts is', newTs)
     ts = newTs
     xSquares = ts.top * measures
+    view.update()
   }
 
   function onToggleRepeat() {
     repeating = !repeating
+    view.update()
   }
-
-  let instrument = 'kick'
-
-  //JSX
-  <test onClick={() => {    
-    playPrecussion(instrument)}
-  }> test no var</test>
-  <test onClick={() => {    
-    runState = 'STOPPED'
-    playPrecussion(instrument)}
-  }> test redefine var </test>
-  <test onClick={() => {    
-    let run = 'STOPPED'
-    playPrecussion(instrument)}
-  }> test new var</test>
-
-
-
 
 
   <Header {...{
-    store, bpm, speed, ts, repeating, runState,
-    onUpdateTs, onToggleRepeat, onChangeBpm,
+    store, bpm, speed, repeating, runState,
+    onToggleRepeat, onChangeBpm,
     onPlay, onPause, onStop, repeating
   }} />
-  <Studio{...{
+  <Studio {...{
     store, speed, repeating, playPrecussion,
     playingBeat
   }} />

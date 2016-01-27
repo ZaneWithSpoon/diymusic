@@ -30,6 +30,10 @@ export const addPremadeBeatHypermeasure = () => {
   }
 }
 
+export const updateHypermeasureName = (id) => ({
+  type: 'UPDATE_HYPERMEASURE_NAME', id
+})
+
 export const addBeatNote = (id, instrument, beat) => ({
   type: 'ADD_BEAT_NOTE', id, instrument, beat
 })

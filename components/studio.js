@@ -1,3 +1,5 @@
+import { addPremadeBeatHypermeasure } from '../actions/actions'
+
 view Studio { 
 
   prop store
@@ -7,8 +9,7 @@ view Studio {
   prop playingBeat
 
 
-  let id = ''
-
+  let id = store.dispatch(addPremadeBeatHypermeasure())
 
   function switchToDrumpad(newID) {
     id = newID
@@ -23,7 +24,7 @@ view Studio {
   let squares = Math.floor(window.innerHeight/100)
   let height = squares*50+24
 
-  let viewState = 'tl'
+  let viewState = 'dp'
 
 
   <studio>
@@ -58,8 +59,7 @@ view Studio {
     height: window.innerHeight-80,
     width: 320,
     overflow: 'auto',
-    float: 'left',
-    marginTop: -6
+    float: 'left'
   }
 
   $DrumPad = {
