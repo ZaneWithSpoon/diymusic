@@ -8,8 +8,7 @@ view InstrumentPanel {
   prop switchToTimeline
   prop isChecked
   prop toggleChecked
-
-  let instrumentPanelData = store.getState().instrumentPanel
+  prop instrumentPanelData
 
   let currentInstruments = []  
   instrumentPanelData.map( x => {

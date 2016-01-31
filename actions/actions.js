@@ -1,47 +1,62 @@
 /*
  * action creators
  */
-function addHypermeasureId(id, name, instrument) {
-  return { type: 'ADD_HYPERMEASURE', id, name }
+function addHypermeasureId(channelId, loopId, name) {
+  return { type: 'ADD_HYPERMEASURE', channelId, loopId, name }
 }
 
 function addPremadeBeatHypermeasureId(id) {
   return { type: 'ADD_PREMADE_BEAT_HYPERMEASURE', id }
 }
 
-// function addNoteHypermeasure(id, name) {
-//   return { type: 'ADD_NOTE_HYPERMEASURE', id }
-// }
+function addChannel(id, name, instrument) {
+  return { type: 'ADD_CHANNEL', id, name, instrument }
+}
+
+function defaultChannel(channelId, loopId){
+  return { type: 'ADD_DEFAULT_HYPERMEASURE', channelId, loopId }
+}
 
 
-// export const addNoteHypermeasure = () => {
-//   return dispatch => {
-//     //generating a unique ID for this Hypemeasure
-//     let id = Math.random().toString(36).substr(2, 9)
-//     let name = 'unnamed'
-//     dispatch(addNoteHypermeasureId(id, name))
-//     return {id, name}
-//   }
-// }
+//function 
 
-export const addHypermeasure = () => {
+export const addDrums = () => {
+  return dispatch => {
+    let id = Math.random().toString(36).substr(2, 9)
+    let name = 'Drums'
+    let instrument = 'drums'
+    dispatch(addChannel(id, name, instrument))
+    return {id, name}
+  }
+}
+
+export const addInstrument = (instrument) => {
+  return dispatch => {
+    let id = Math.random().toString(36).substr(2, 9)
+    let name = instrument
+    dispatch(addChannel(id, name, instrument))
+    return {id, name}
+  }
+}
+
+export const addHypermeasure = (channelId) => {
   return dispatch => {
     //generating a unique ID for this Hypemeasure
-    let id = Math.random().toString(36).substr(2, 9)
+    let loopId = Math.random().toString(36).substr(2, 9)
     let name = 'unnamed'
-    dispatch(addBeatHypermeasureId(id, name))
-    return {id, name}
+    dispatch(addHypermeasureId(channelId, loopId, name))
+    return {loopId, name}
   }
 }
 
 export const addPremadeBeatHypermeasure = () => {
   return dispatch => {
     //generating a unique ID for this Hypemeasure
-    let id = Math.random().toString(36).substr(2, 9)
-    let name = 'premade'
-    dispatch(addPremadeBeatHypermeasureId(id))
-    dispatch(addInstrumentLoop(id, name, 'drums'))
-    return id
+    let channelId = Math.random().toString(36).substr(2, 9)
+    let loopId = Math.random().toString(36).substr(2, 9)
+
+    dispatch(defaultChannel( channelId, loopId ))
+    return loopId
   }
 }
 
@@ -61,11 +76,4 @@ export const updateBpm = newBpm => ({
   type: 'UPDATE_BPM', newBpm
 })
 
-export const addInstrument = (instrument) => ({
-  type:'ADD_INSTRUMENT', instrument
-})
-
-export const addInstrumentLoop = (id, name, instrument) => ({
-  type: 'ADD_INSTRUMENT_LOOP', id, name, instrument
-})
 

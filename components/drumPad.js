@@ -17,11 +17,11 @@ view DrumPad {
   let newName = ''
   let changingName = false
 
-  on.props(() => {
-    thing = store.getState().hypermeasures.map(({ id }) => id)
-    hmi = thing.indexOf(id)
-    hmData = store.getState().hypermeasures[hmi]
-  })
+  // on.props(() => {
+  //   thing = store.getState().channels.map(({ id }) => id)
+  //   hmi = thing.indexOf(id)
+  //   hmData = store.getState().channels[hmi]
+  // })
 
   function toggleNameChange(){
     changingName = !changingName

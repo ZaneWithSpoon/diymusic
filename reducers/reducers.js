@@ -2,30 +2,15 @@ import { combineReducers } from 'redux'
 import sugar from 'sugar'
 
 //reducer functions
-function instrumentPanel(
-  state = [ 
-  {instrument:'drums', loops: []}, 
-  {instrument:'piano', loops: []},
-  {instrument:'synth', loops: []},], 
-  action) {
+function songData( state = { name:'title', bpm:120 }, action) {
 
   switch (action.type) {
-    case 'ADD_INSTRUMENT_LOOP':
-      var thing = state.map(function(x) { return x.instrument })
-      var index = thing.indexOf(action.instrument)
+    case 'UPDATE_BPM':
+      return { name:state.name, bpm:action.newBpm }
+      break
 
-      //creating new array to replace state[index]notes
-      var loops = state[index].loops
-      var newLoop = { id: action.id, name: action.name }
-      loops.push(newLoop)
-
-      return [
-        ...state.slice(0, index),
-        Object.assign({}, state[index], {
-          loops: loops
-        }),
-        ...state.slice(index + 1)
-      ]
+    case 'UPDATE_SONG_NAME':
+      return { name:action.newName, bpm:state.bpm }
       break
 
     default:
@@ -33,11 +18,22 @@ function instrumentPanel(
   }
 }
 
-function hypermeasures(state = [], action) {
+
+
+
+function channels(state = [], action) {
 
   switch (action.type) {
-    case 'ADD_PREMADE_BEAT_HYPERMEASURE':
-      //creating empty array of arrays (2d matrix)
+    case 'ADD_DEFAULT_HYPERMEASURE':
+
+      var initialChannel = {  id:action.channelId,
+                              name:'drums',
+                              sampleType:'drumpad',
+                              hypermeasures: [] }
+
+
+
+      //creating empty 2d matrix to represent grid
       var empty = new Array
       for(i = 0; i < 16; i++){
         empty.push(new Array)
@@ -59,31 +55,28 @@ function hypermeasures(state = [], action) {
       empty[1].push('tom')
       empty[9].push('tom')
 
-      return [
-        ...state,
-        {
-          id: action.id,
+
+      initialChannel.hypermeasures.push({
+          id: action.hypermeasureId,
           size: 16,
-          beatOrMelody: 'BEAT',
           instruments: ['kick', 'snare', 'tom', 'hat'],
           notes: empty,
           name: 'premade'
-        }
-      ]
+        })
+
+      return [initialChannel]
       break
+
+
 
     case 'UPDATE_HYPERMEASURE_NAME': 
       var thing = state.map(function(x) { return x.id })
       var index = thing.indexOf(action.id)
 
-      return [
-        ...state.slice(0, index),
-        Object.assign({}, state[index], {
-          name: action.name
-        }),
-        ...state.slice(index + 1)
-      ]
+      return state
       break
+
+
 
     case 'ADD_BEAT_HYPERMEASURE':
 
@@ -147,6 +140,6 @@ function hypermeasures(state = [], action) {
 }
 
 export const diymApp = combineReducers({
-  instrumentPanel,
-  hypermeasures
+  songData,
+  channels
 })

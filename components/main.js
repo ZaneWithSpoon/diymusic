@@ -25,6 +25,10 @@ const soundfont = new Soundfont(ctx)
 view Main {
   view.pause()
 
+  //defining initial state variables
+  let song = store.getState()
+  let channels = song.channels
+
 
   //Defning default variables
   let bpm = 120
@@ -37,7 +41,18 @@ view Main {
   let playingBeat = -1
   let beatWait = []
 
-  let viewState = 'tl'
+  store.subscribe(updateSong)
+
+  function updateSong(){
+    song = store.getState()
+    channels = song.channels
+
+    console.log('song - Store updated')
+    console.log(song)
+
+    view.update()
+  }
+
 
   //Key command functions
   on.keydown((e) => {
@@ -54,7 +69,6 @@ view Main {
       //instruments = store.getState().
     }
   })
-
 
   //Playing Audio Functions
   function loadAudio(sourceBuffer, url) {
@@ -178,6 +192,7 @@ view Main {
 
     //playPrecussion('hat')
     view.update()
+    updateSong()
   }
 
 
@@ -209,7 +224,7 @@ view Main {
   }} />
   <Studio {...{
     store, speed, repeating, playPrecussion,
-    playingBeat, playNote
+    playingBeat, playNote, channels
   }} />
 
 
