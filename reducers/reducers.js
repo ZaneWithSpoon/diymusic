@@ -67,7 +67,10 @@ function channels(state = [], action) {
       return [initialChannel]
       break
 
+    case 'ADD_CHANNEL': 
 
+      return state
+      break
 
     case 'UPDATE_HYPERMEASURE_NAME': 
       var thing = state.map(function(x) { return x.id })

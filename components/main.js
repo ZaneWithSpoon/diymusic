@@ -50,14 +50,8 @@ view Main {
     console.log('song - Store updated')
     console.log(song)
 
-    testUpdate()
-  }
-
-
-  function testUpdate() {
     view.update()
   }
-
 
 
   //Key command functions
@@ -226,9 +220,6 @@ view Main {
   }
 
 
-  <test>
-    test
-  </test>
   <Header {...{
     store, bpm, speed, repeating, runState,
     onToggleRepeat, onChangeBpm,

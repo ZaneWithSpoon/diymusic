@@ -18,7 +18,6 @@ function defaultChannel(channelId, loopId){
 }
 
 
-//function 
 
 export const addDrums = () => {
   return dispatch => {

@@ -16,18 +16,14 @@ view Studio {
 
   //let focusedMeasure = setFocusedMeasure(id)
 
-  let id = ''
+  let id = store.dispatch(addPremadeBeatHypermeasure())
+  
   //let checkedHypermeasures = [id]
   on.props(() => {
     console.log('studio channels on prop')
     console.log(channels)
     setFocusedMeasure(id)
   }) 
-
-  on.mount(() => {
-    id = store.dispatch(addPremadeBeatHypermeasure())
-    console.log(id +' id')
-  })
 
 
 
