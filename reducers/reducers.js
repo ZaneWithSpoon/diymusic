@@ -79,7 +79,7 @@ function hypermeasures(state = [], action) {
       return [
         ...state.slice(0, index),
         Object.assign({}, state[index], {
-          notes: notes
+          name: action.name
         }),
         ...state.slice(index + 1)
       ]

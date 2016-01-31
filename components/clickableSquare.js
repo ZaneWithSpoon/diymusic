@@ -13,11 +13,11 @@ view ClickableSquare {
   }
 
   $clicked = {
-    background: 'yellow'
+    background: '#d81cd8'
   }
 
   $playing = {
-    background: '#d81cd8'
+    background: '#FE621D'
   }
 
   $block = {

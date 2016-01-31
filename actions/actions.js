@@ -1,15 +1,30 @@
 /*
  * action creators
  */
-function addBeatHypermeasureId(id, name) {
-  return { type: 'ADD_BEAT_HYPERMEASURE', id, name }
+function addHypermeasureId(id, name, instrument) {
+  return { type: 'ADD_HYPERMEASURE', id, name }
 }
 
 function addPremadeBeatHypermeasureId(id) {
   return { type: 'ADD_PREMADE_BEAT_HYPERMEASURE', id }
 }
 
-export const addBeatHypermeasure = () => {
+// function addNoteHypermeasure(id, name) {
+//   return { type: 'ADD_NOTE_HYPERMEASURE', id }
+// }
+
+
+// export const addNoteHypermeasure = () => {
+//   return dispatch => {
+//     //generating a unique ID for this Hypemeasure
+//     let id = Math.random().toString(36).substr(2, 9)
+//     let name = 'unnamed'
+//     dispatch(addNoteHypermeasureId(id, name))
+//     return {id, name}
+//   }
+// }
+
+export const addHypermeasure = () => {
   return dispatch => {
     //generating a unique ID for this Hypemeasure
     let id = Math.random().toString(36).substr(2, 9)
@@ -30,8 +45,8 @@ export const addPremadeBeatHypermeasure = () => {
   }
 }
 
-export const updateHypermeasureName = (id) => ({
-  type: 'UPDATE_HYPERMEASURE_NAME', id
+export const updateHypermeasureName = (id, name) => ({
+  type: 'UPDATE_HYPERMEASURE_NAME', id, name
 })
 
 export const addBeatNote = (id, instrument, beat) => ({

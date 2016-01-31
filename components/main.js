@@ -25,11 +25,6 @@ const soundfont = new Soundfont(ctx)
 view Main {
   view.pause()
 
-  let inst = soundfont.instrument('acoustic_grand_piano')
-  inst.onready(function() {
-    inst.play('C4', 0)
-  })
-
 
   //Defning default variables
   let bpm = 120
@@ -46,7 +41,7 @@ view Main {
 
   //Key command functions
   on.keydown((e) => {
-    //console.log(e.keyCode)
+    console.log(e.keyCode)
     if(e.keyCode === 32){
       e.preventDefault()
 
@@ -75,6 +70,13 @@ view Main {
       })
     }
     request.send()
+  }
+
+  function playNote(note, instrument) {
+    let inst = soundfont.instrument(instrument)
+    inst.onready(function() {
+      inst.play(note, 0)
+    })
   }
 
   function playPrecussion(instrument) {
@@ -207,7 +209,7 @@ view Main {
   }} />
   <Studio {...{
     store, speed, repeating, playPrecussion,
-    playingBeat
+    playingBeat, playNote
   }} />
 
 

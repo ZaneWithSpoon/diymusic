@@ -6,11 +6,12 @@ view InstrumentPanel {
   prop switchToDrumpad
   prop viewState
   prop switchToTimeline
+  prop isChecked
+  prop toggleChecked
 
   let instrumentPanelData = store.getState().instrumentPanel
 
-
-  let currentInstruments = []
+  let currentInstruments = []  
   instrumentPanelData.map( x => {
       if(currentInstruments.indexOf(x.instrument) === -1){
         currentInstruments.push(x.instrument)
@@ -51,9 +52,9 @@ view InstrumentPanel {
               <Hypermeasures 
                 loop={i}
                 focus={() => {switchToDrumpad(i.id)}}
-                toggleChecked={() => {console.log('checked')}}
                 options={() => {console.log('options')}}
-                instrument={_.instrument}/>
+                checked={isChecked(i.id)}
+                toggleChecked={toggleChecked}/>
             </td>
           )}
           <td onClick={() => addInstrumentLoop(_.instrument)}>

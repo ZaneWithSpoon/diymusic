@@ -16,8 +16,8 @@ view Hypermeasures {
         {loop.name}
       </selectDiv>
       <optionsDiv>
-        <checkDiv onClick={toggleChecked}>
-          <img src="../assets/basic-ui/png/basic14.png" draggable='false' height='75%' width='75%'/>
+        <checkDiv onClick={() => {toggleChecked(loop.id)}}>
+          <img if={checked} src="../assets/basic-ui/png/basic14.png" draggable='false' height='75%' width='75%'/>
         </checkDiv>
         <menuDiv onClick={options}>
           ......
