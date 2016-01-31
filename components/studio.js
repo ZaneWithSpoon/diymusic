@@ -16,24 +16,31 @@ view Studio {
 
   //let focusedMeasure = setFocusedMeasure(id)
 
-
+  let id = ''
   //let checkedHypermeasures = [id]
   on.props(() => {
     console.log('studio channels on prop')
     console.log(channels)
+    setFocusedMeasure(id)
   }) 
 
+  on.mount(() => {
+    id = store.dispatch(addPremadeBeatHypermeasure())
+    console.log(id +' id')
+  })
 
-  let id = store.dispatch(addPremadeBeatHypermeasure())
 
 
   function setFocusedMeasure(newId) {
     console.log('setFocusedMeasure')
+    let temp = {}
     channels.map( x => {
-      console.log( 'x' )
+      if(x.id == newId){
+        temp = x
+      }
     })
 
-    return 'bs'
+    return temp
   }
 
   function switchToDrumpad(newID) {
@@ -78,6 +85,10 @@ view Studio {
     <timeline if={viewState == 'tl'}>
       <Timeline />
     </timeline>
+    <chan>
+      {channels[0].id}
+    </chan>
+
 
   </studio>
 

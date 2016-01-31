@@ -23,7 +23,7 @@ const soundfont = new Soundfont(ctx)
 
 //main.js
 view Main {
-  view.pause()
+  //view.pause()
 
   //defining initial state variables
   let song = store.getState()
@@ -50,8 +50,14 @@ view Main {
     console.log('song - Store updated')
     console.log(song)
 
+    testUpdate()
+  }
+
+
+  function testUpdate() {
     view.update()
   }
+
 
 
   //Key command functions
@@ -186,13 +192,16 @@ view Main {
   }
 
   function onStop(){
-    stop()
-    playingBeat = -1
-    runState = 'STOPPED'
+    // stop()
+    // playingBeat = -1
+    // runState = 'STOPPED'
 
     //playPrecussion('hat')
+    console.log('onStop')
+    console.log(channels)
+
     view.update()
-    updateSong()
+    
   }
 
 
@@ -217,6 +226,9 @@ view Main {
   }
 
 
+  <test>
+    test
+  </test>
   <Header {...{
     store, bpm, speed, repeating, runState,
     onToggleRepeat, onChangeBpm,
