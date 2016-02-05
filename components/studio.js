@@ -14,33 +14,37 @@ view Studio {
   //TODO: make a way to update names in instrument panel
   //when changes in drumpad and vice versa
 
-  //let focusedMeasure = setFocusedMeasure(id)
-
   let id = store.dispatch(addPremadeBeatHypermeasure())
-  
-  //let checkedHypermeasures = [id]
-  on.props(() => {
-    console.log('studio channels on prop')
-    console.log(channels)
-    setFocusedMeasure(id)
-  }) 
+  let focusedMeasure = setFocusedMeasure(id)
+  let checkedHypermeasures = [id]
 
+
+  on.props(() => {
+    console.log('props')
+    focusedMeasure = setFocusedMeasure(id)
+  }) 
 
 
   function setFocusedMeasure(newId) {
     console.log('setFocusedMeasure')
     let temp = {}
-    channels.map( x => {
-      if(x.id == newId){
-        temp = x
-      }
+    channels.map( channel => {
+      channel.hypermeasures.map( loop => {
+        if(loop.id === newId){
+          console.log('match')
+          console.log(loop)
+          temp = loop
+        }
+      })
     })
-
     return temp
   }
 
   function switchToDrumpad(newID) {
+    console.log(newID)
     id = newID
+    focusedMeasure = setFocusedMeasure(id)
+    console.log(focusedMeasure)
     viewState = 'dp'
   }
 
@@ -81,9 +85,15 @@ view Studio {
     <timeline if={viewState == 'tl'}>
       <Timeline />
     </timeline>
-    <chan>
-      {channels[0].id}
-    </chan>
+    <InstrumentPanel {...{store, 
+      switchToDrumpad, switchToTimeline,
+      viewState, isChecked, toggleChecked,
+      instrumentPanelData: channels
+    }} />
+    <DrumPad {...{store,
+      focusedMeasure, playPrecussion,
+      playingBeat
+    }} />
 
 
   </studio>
@@ -94,7 +104,7 @@ view Studio {
     overflowX: 'auto'
   }
 
-  $instrumentPanel = {
+  $InstrumentPanel = {
     background: 'grey',
     border: 'solid',
     borderWidth: 1,

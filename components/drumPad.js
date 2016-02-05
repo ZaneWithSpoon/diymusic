@@ -4,11 +4,9 @@ import { addBeatNote, removeBeatNote, updateHypermeasureName } from '../actions/
 
 view DrumPad {
   prop store
-  prop id
+  prop focusedMeasure
   prop playPrecussion
   prop playingBeat
-  prop updateName
-  prop refreshName
 
   let currentInstruments = ['kick', 'snare', 'tom', 'hat']
   let x = 16
@@ -17,11 +15,6 @@ view DrumPad {
   let newName = ''
   let changingName = false
 
-  // on.props(() => {
-  //   thing = store.getState().channels.map(({ id }) => id)
-  //   hmi = thing.indexOf(id)
-  //   hmData = store.getState().channels[hmi]
-  // })
 
   function toggleNameChange(){
     changingName = !changingName
@@ -31,15 +24,13 @@ view DrumPad {
     console.log(newName)
     changingName = !changingName
     if(newName != ''){
-      hmData.name = newName
-      store.dispatch(updateHypermeasureName(hmData.id, newName))   
-      refreshName(newName)
+      store.dispatch(updateHypermeasureName(focusedMeasure.id, newName))   
     }
   
   }
 
   function getClass(index, instrument) {
-    let indexArray = hmData.notes[index]
+    let indexArray = focusedMeasure.notes[index]
 
     if(!indexArray.none(instrument)){
       return 'clicked'
@@ -69,10 +60,10 @@ view DrumPad {
 
   <drumPad>
     <title if={!changingName} onClick={toggleNameChange}>
-      {hmData.name}
+      {focusedMeasure.name}
     </title>
     <titleChange if={changingName}>
-      <input defaultValue={hmData.name} sync={newName} onEnter={() => changeName(newName)} />
+      <input defaultValue={focusedMeasure.name} sync={newName} onEnter={() => changeName(newName)} />
     </titleChange>
    <table>
      <tbody>

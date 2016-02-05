@@ -1,4 +1,4 @@
-import { addBeatHypermeasure } from '../actions/actions'
+import { addHypermeasure } from '../actions/actions'
 
 view InstrumentPanel {
 
@@ -10,43 +10,43 @@ view InstrumentPanel {
   prop toggleChecked
   prop instrumentPanelData
 
+
   let currentInstruments = []  
   instrumentPanelData.map( x => {
-      if(currentInstruments.indexOf(x.instrument) === -1){
-        currentInstruments.push(x.instrument)
+      if(currentInstruments.indexOf(x.name) === -1){
+        currentInstruments.push(x.name)
       }
     }
   )
 
-  function addInstrumentLoop(instrument) {
+  console.log(instrumentPanelData)
+
+  function addInstrumentLoop(sampleType, id) {
     let hm = {}
-    if(instrument === 'drums'){
-      hm = store.dispatch(addBeatHypermeasure())
+    if(sampleType === 'drumpad'){
+      //TODO: make addHypermeasure work on redux end
+      hm = store.dispatch(addHypermeasure(id)) 
 
-      let thing = instrumentPanelData.map(function(x) { return x.instrument })
-      let index = thing.indexOf(instrument)
-      if(hm != {}){
-        instrumentPanelData[index].loops.push(hm)
-      }
-      switchToDrumpad(hm.id)  
+      console.log(hm)
 
+      switchToDrumpad(hm.id)
     } else {
-      console.log('else')
+      console.log(instrument)
     }
   }
 
 
   <instrumentPanel>
 
-    <back if={viewState === 'dp'} onClick={switchToTimeline}>
+    <back if={viewState !== 'tl'} onClick={switchToTimeline}>
       back
     </back>
     <title>instrument panel </title>
     <table>
       <tbody>
         <tr repeat={instrumentPanelData} >
-          <td key={_.instrument}>{_.instrument}</td>
-          {_.loops.map(i =>
+          <td key={_.name}>{_.name}</td>
+          {_.hypermeasures.map(i =>
             <td key={i.id} >
               <Hypermeasures 
                 loop={i}
@@ -56,7 +56,7 @@ view InstrumentPanel {
                 toggleChecked={toggleChecked}/>
             </td>
           )}
-          <td onClick={() => addInstrumentLoop(_.instrument)}>
+          <td onClick={() => addInstrumentLoop(_.sampleType, _.id)}>
             <Hypermeasures
               loop='undefined'
               instrument={_.instrument}/>

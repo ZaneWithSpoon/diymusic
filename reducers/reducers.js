@@ -57,7 +57,7 @@ function channels(state = [], action) {
 
 
       initialChannel.hypermeasures.push({
-          id: action.hypermeasureId,
+          id: action.loopId,
           size: 16,
           instruments: ['kick', 'snare', 'tom', 'hat'],
           notes: empty,

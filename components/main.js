@@ -1,7 +1,6 @@
 //diym ( diy music ) built by Zane Witherspoon
 
 import { createStore, applyMiddleware } from 'redux'
-import { connect } from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
 import { diymApp } from '../reducers/reducers'
@@ -23,7 +22,7 @@ const soundfont = new Soundfont(ctx)
 
 //main.js
 view Main {
-  //view.pause()
+  view.pause()
 
   //defining initial state variables
   let song = store.getState()
@@ -47,7 +46,7 @@ view Main {
     song = store.getState()
     channels = song.channels
 
-    console.log('song - Store updated')
+    console.log('song')
     console.log(song)
 
     view.update()
@@ -103,7 +102,6 @@ view Main {
     sourceBuffer.connect(ctx.destination)
     sourceBuffer.loop = false
 
-    //console.log(sourceBuffer)
     setTimeout(() => {
       sourceBuffer.start()  
     })
@@ -186,16 +184,11 @@ view Main {
   }
 
   function onStop(){
-    // stop()
-    // playingBeat = -1
-    // runState = 'STOPPED'
+    stop()
+    playingBeat = -1
+    runState = 'STOPPED'
 
-    //playPrecussion('hat')
-    console.log('onStop')
-    console.log(channels)
-
-    view.update()
-    
+    view.update()    
   }
 
 
