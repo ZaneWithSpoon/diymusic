@@ -18,8 +18,6 @@ const ctx = new (window.AudioContext || window.webkitAudioContext)
 const soundfont = new Soundfont(ctx)
 
 
-
-
 //main.js
 view Main {
   view.pause()
@@ -32,11 +30,12 @@ view Main {
   //Defning default variables
   let bpm = 120
   let speed = 60000/bpm/2
-  let repeating = true
   let runState = 'STOPPED'
-  let xSquares = 16
 
-
+  let currentHypermeasures = []
+  let checkedHypermeasures = []
+  let concentratedNotes = []
+  
   let playingBeat = -1
   let beatWait = []
 
@@ -46,12 +45,21 @@ view Main {
     song = store.getState()
     channels = song.channels
 
-    console.log('song')
-    console.log(song)
+    console.log(channels)
 
     view.update()
   }
 
+  function toggleChecked(id){
+    let index = checkedHypermeasures.indexOf(id)
+    if(index === -1){
+      checkedHypermeasures.push(id)
+    } else {
+      checkedHypermeasures.splice(index, 1)
+    }
+
+    view.update()
+  }
 
   //Key command functions
   on.keydown((e) => {
@@ -78,7 +86,6 @@ view Main {
 
     request.onload = function() {
       ctx.decodeAudioData(request.response, function(buffer) {
-        //console.log(buffer)
         sourceBuffer.buffer = buffer
       })
     }
@@ -102,11 +109,8 @@ view Main {
     sourceBuffer.connect(ctx.destination)
     sourceBuffer.loop = false
 
-    setTimeout(() => {
-      sourceBuffer.start()  
-    })
+    sourceBuffer.start()  
 
-    // view.update()
     
   }
 
@@ -117,63 +121,90 @@ view Main {
     beatWait = []
   }
 
-  function updateLater() { setTimeout(() => view.update(),  10) }
-  function play() {
-
-    let i = playingBeat+1;
-    incrementPlayingBeat(i)
-    checkForRepeat(i)
-    updateLater()
-  }
+  function updateLater() { setTimeout(() => view.update(),  100) }
+  
   // done because of likely bug in audio api
   // where view.set overstimulates audio
   // so temporarily turn off flint
-  function incrementPlayingBeat(i) {
-    renderAudio(i)
-    playingBeat++
-    updateLater()
-  }
+
   function renderAudio(i) {
 
-    //TODO : play focused hypermeasures
-    let notes = store.getState().hypermeasures[0].notes[i]
-    // console.log(i)
-    // console.log(notes)
-    notes.map(instrument => {
-      playPrecussion(instrument)
+    concentratedNotes.map(channel => {
+      if(channel.sampleType == 'drumpad'){
+        channel.notes[i].map( instrument =>
+          playPrecussion(instrument)
+        )
+      } else {
+        channel.notes[i].map( note =>
+          playNote(note, channel.instrument)
+        )
+      }
     })
   }
 
-  function loadBeat(i) {
-    beatWait.push(waiting = setTimeout(() => {
-      incrementPlayingBeat(i)
+  function loadCurrentHypermeasures() {
 
-      checkForRepeat(i)
-    }, speed))
-  }
-
-
-  function checkForRepeat(i) {
-    if(i == (xSquares-1) && repeating){
-      setTimeout(function(){
-        playingBeat = -1
-        play()
-      }, speed)
-    } else if(i == (xSquares-1) && !repeating){
-      setTimeout(function(){
-        onStop()
-      }, speed)
-    } else {
-      loadBeat(i+1)
+    concentratedNotes = []
+    let empty = []
+    for(i = 0; i < 16; i++){
+      empty.push(new Array)
     }
-    updateLater()
-  }
 
+    for(i = 0; i < channels.length; i++){
+
+      if(channels[i].sampleType === 'drumpad'){
+        concentratedNotes.push({
+          sampleType: channels[i].sampleType, 
+          notes: empty
+        })        
+      } else if(channels[i].sampleType === 'pianoroll'){
+        concentratedNotes.push({
+          sampleType: channels[i].sampleType, 
+          instrument: channels[i].instrument,
+          notes: empty
+        }) 
+      }
+
+      channels[i].hypermeasures.map( loop => {
+        checkedHypermeasures.map( id => {
+          if(loop.id === id){
+            for(b = 0; b < loop.notes.length; b++){
+              loop.notes[b].map( instrument => {
+                concentratedNotes[i].notes[b].push(instrument)
+              })
+            }
+          }
+        })
+      })
+
+    }
+
+  }
 
   //play-pause-stop buttons
   function onPlay(){
-    play()
+    loadCurrentHypermeasures()
+
     runState = 'PLAYING'
+
+    incrementPlayingBeat()
+
+    updateLater()
+    //view.update()
+  }
+
+  function incrementPlayingBeat() {
+    playingBeat++
+
+    renderAudio(playingBeat)
+
+    if(playingBeat >= 15){
+      loadCurrentHypermeasures()
+      playingBeat = -1
+    } 
+    
+    beatWait.push(setTimeout(() => incrementPlayingBeat(), speed))
+
     updateLater()
   }
 
@@ -207,20 +238,17 @@ view Main {
     view.update()
   }
 
-  function onToggleRepeat() {
-    repeating = !repeating
-    view.update()
-  }
 
 
   <Header {...{
-    store, bpm, speed, repeating, runState,
-    onToggleRepeat, onChangeBpm,
-    onPlay, onPause, onStop, repeating
+    store, bpm, speed, runState,
+    onChangeBpm,
+    onPlay, onPause, onStop
   }} />
   <Studio {...{
-    store, speed, repeating, playPrecussion,
-    playingBeat, playNote, channels
+    store, speed, playPrecussion, checkedHypermeasures,
+    playingBeat, playNote, channels,
+    toggleChecked
   }} />
 
 

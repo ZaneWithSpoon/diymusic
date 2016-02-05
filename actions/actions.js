@@ -63,8 +63,8 @@ export const updateHypermeasureName = (id, name) => ({
   type: 'UPDATE_HYPERMEASURE_NAME', id, name
 })
 
-export const addBeatNote = (id, instrument, beat) => ({
-  type: 'ADD_BEAT_NOTE', id, instrument, beat
+export const toggleNote = (channelId, loopId, beat, note) => ({
+  type: 'TOGGLE_NOTE', channelId, loopId, beat, note
 })
 
 export const removeBeatNote = (id, instrument, beat) => ({

@@ -8,28 +8,25 @@ view InstrumentPanel {
   prop switchToTimeline
   prop isChecked
   prop toggleChecked
-  prop instrumentPanelData
+  prop channels
 
 
-  let currentInstruments = []  
-  instrumentPanelData.map( x => {
-      if(currentInstruments.indexOf(x.name) === -1){
-        currentInstruments.push(x.name)
-      }
-    }
-  )
+  let channelIds = []  
+  on.props(() => {
+    channels.map( x => {
+      channelIds.push(x.id)
+    })
+  })
 
-  console.log(instrumentPanelData)
 
-  function addInstrumentLoop(sampleType, id) {
+  console.log(channelIds)
+
+  function addInstrumentLoop(sampleType, channelId) {
     let hm = {}
     if(sampleType === 'drumpad'){
       //TODO: make addHypermeasure work on redux end
-      hm = store.dispatch(addHypermeasure(id)) 
-
-      console.log(hm)
-
-      switchToDrumpad(hm.id)
+      hm = store.dispatch(addHypermeasure(channelId)) 
+      switchToDrumpad(hm.loopId)
     } else {
       console.log(instrument)
     }
@@ -44,9 +41,9 @@ view InstrumentPanel {
     <title>instrument panel </title>
     <table>
       <tbody>
-        <tr repeat={instrumentPanelData} >
-          <td key={_.name}>{_.name}</td>
-          {_.hypermeasures.map(i =>
+        <tr repeat={channels} >
+          <td key={_.name}> {_.name} </td>
+          {_.hypermeasures.map( i =>
             <td key={i.id} >
               <Hypermeasures 
                 loop={i}
@@ -65,12 +62,15 @@ view InstrumentPanel {
       </tbody>
     </table>
 
+    <another>
+      another one
+    </another>
+
   </instrumentPanel>
 
 
   $back = {
     color: 'white'
   }
-
 
 }

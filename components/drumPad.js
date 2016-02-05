@@ -1,5 +1,5 @@
 import { range } from 'lodash';
-import { addBeatNote, removeBeatNote, updateHypermeasureName } from '../actions/actions'
+import { toggleNote, updateHypermeasureName } from '../actions/actions'
 
 
 view DrumPad {
@@ -7,6 +7,7 @@ view DrumPad {
   prop focusedMeasure
   prop playPrecussion
   prop playingBeat
+  prop channelId
 
   let currentInstruments = ['kick', 'snare', 'tom', 'hat']
   let x = 16
@@ -44,18 +45,7 @@ view DrumPad {
   }
 
   function toggleActive(index, instrument) {
-
-    if(getClass(index, instrument) != 'clicked') {
-      console.log('noteAdd')
-      store.dispatch(addBeatNote(id, instrument, index))
-      hmData.notes[index].push(instrument)
-    } else {
-      console.log('noteRemove')
-      store.dispatch(removeBeatNote(id, instrument, index))
-      var instIndex = currentInstruments.indexOf(instrument)
-      hmData.notes[index].splice(instIndex, 1)
-    }
-
+    store.dispatch(toggleNote(channelId, focusedMeasure.id, index, instrument))
   }
 
   <drumPad>

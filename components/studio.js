@@ -8,7 +8,8 @@ view Studio {
   prop playPrecussion
   prop playNote
   prop playingBeat
-  prop playHypermeasures
+  prop checkedHypermeasures
+  prop toggleChecked
   prop channels
 
   //TODO: make a way to update names in instrument panel
@@ -16,24 +17,21 @@ view Studio {
 
   let id = store.dispatch(addPremadeBeatHypermeasure())
   let focusedMeasure = setFocusedMeasure(id)
-  let checkedHypermeasures = [id]
+  toggleChecked(id)
+  let focusedChannelId = ''
 
 
   on.props(() => {
-    console.log('props')
     focusedMeasure = setFocusedMeasure(id)
   }) 
 
-
   function setFocusedMeasure(newId) {
-    console.log('setFocusedMeasure')
     let temp = {}
     channels.map( channel => {
       channel.hypermeasures.map( loop => {
         if(loop.id === newId){
-          console.log('match')
-          console.log(loop)
           temp = loop
+          focusedChannelId = channel.id
         }
       })
     })
@@ -41,10 +39,8 @@ view Studio {
   }
 
   function switchToDrumpad(newID) {
-    console.log(newID)
     id = newID
     focusedMeasure = setFocusedMeasure(id)
-    console.log(focusedMeasure)
     viewState = 'dp'
   }
 
@@ -57,17 +53,8 @@ view Studio {
     viewState = 'tl'
   }
 
-  function toggleChecked(id) {
-    let index = checkedHypermeasures.indexOf(id)
-    if(index != -1) {
-      checkedHypermeasures.splice(index, 1)
-    } else {
-      checkedHypermeasures.push(id)
-    }
-  }
-
   function isChecked(id) {
-    if(checkedHypermeasures.indexOf(id) != -1){
+    if(checkedHypermeasures.indexOf(id) !== -1){
       return true
     } else {
       return false
@@ -88,13 +75,12 @@ view Studio {
     <InstrumentPanel {...{store, 
       switchToDrumpad, switchToTimeline,
       viewState, isChecked, toggleChecked,
-      instrumentPanelData: channels
+      channels
     }} />
-    <DrumPad {...{store,
+    <DrumPad {...{store, focusedChannelId,
       focusedMeasure, playPrecussion,
-      playingBeat
+      playingBeat, channelId: focusedChannelId
     }} />
-
 
   </studio>
 

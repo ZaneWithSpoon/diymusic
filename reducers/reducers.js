@@ -19,8 +19,6 @@ function songData( state = { name:'title', bpm:120 }, action) {
 }
 
 
-
-
 function channels(state = [], action) {
 
   switch (action.type) {
@@ -67,75 +65,64 @@ function channels(state = [], action) {
       return [initialChannel]
       break
 
-    case 'ADD_CHANNEL': 
+    case 'ADD_HYPERMEASURE':
 
-      return state
-      break
+      var idArray = state.map(function(x) { return x.id })
+      var index = idArray.indexOf(action.channelId)
 
-    case 'UPDATE_HYPERMEASURE_NAME': 
-      var thing = state.map(function(x) { return x.id })
-      var index = thing.indexOf(action.id)
+      var newChannel = Object.assign({}, state[index])
 
-      return state
-      break
+      if(newChannel.sampleType === 'drumpad'){
+          //creating empty array of arrays (2d matrix)
+          var empty = new Array
+          for(i = 0; i < 16; i++){
+            empty.push(new Array)
+          }
 
+        newChannel.hypermeasures.push({
+            id: action.loopId,
+            size: 16,
+            instruments: ['kick', 'snare', 'tom', 'hat'],
+            notes: empty,
+            name: action.name
+        })
 
-
-    case 'ADD_BEAT_HYPERMEASURE':
-
-      //creating empty array of arrays (2d matrix)
-      var empty = new Array
-      for(i = 0; i < 16; i++){
-        empty.push(new Array)
+      } else if (newChannel.sampleType === 'pianoroll') {
+        //TODO: make different matrix for piano
       }
 
       return [
-        ...state,
-        {
-          id: action.id,
-          size: 16,
-          beatOrMelody: 'BEAT',
-          instruments: ['kick', 'snare', 'tom', 'hat'],
-          notes: empty,
-          name: 'unnamed'
-        }
-      ]
-      break
-
-    case 'ADD_BEAT_NOTE':
-      var thing = state.map(function(x) { return x.id })
-      var index = thing.indexOf(action.id)
-
-      //creating new array to replace state[index]notes
-      var notes = state[index].notes
-      notes[action.beat].push(action.instrument)
-
-      return [
         ...state.slice(0, index),
-        Object.assign({}, state[index], {
-          notes: notes
-        }),
+        newChannel,
         ...state.slice(index + 1)
       ]
       break
 
-    case 'REMOVE_BEAT_NOTE':
-      var thing = state.map(function(x) { return x.id })
-      var index = thing.indexOf(action.id)
+    case 'TOGGLE_NOTE':
+      var idArray = state.map(function(x) { return x.id })
+      var channelIndex = idArray.indexOf(action.channelId)
+
+      idArray = state[channelIndex].hypermeasures.map(function(x) { return x.id })
+      var loopIndex = idArray.indexOf(action.loopId)
 
       //creating new array to replace state[index]notes
-      var notes = state[index].notes
-      notes[action.beat].remove(action.instrument)
+      var notes = state[channelIndex].hypermeasures[loopIndex].notes
+      var noteIndex = notes[action.beat].indexOf(action.note)
+
+      if(noteIndex === -1){
+        notes[action.beat].push(action.note)
+      } else {
+        notes[action.beat].splice(noteIndex, 1)
+      }
 
       return [
-        ...state.slice(0, index),
-        Object.assign({}, state[index], {
+        ...state.slice(0, channelIndex),
+        Object.assign({}, state[channelIndex], {
           notes: notes
         }),
-        ...state.slice(index + 1)
+        ...state.slice(channelIndex + 1)
       ]
-      break 
-
+      break
 
     default:
       return state
