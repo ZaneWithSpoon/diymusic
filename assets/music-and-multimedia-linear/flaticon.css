@@ -1,0 +1,163 @@
+@font-face {
+	font-family: "Flaticon";
+	src: url("flaticon.eot");
+	src: url("flaticon.eot#iefix") format("embedded-opentype"),
+	url("flaticon.woff") format("woff"),
+	url("flaticon.ttf") format("truetype"),
+	url("flaticon.svg") format("svg");
+	font-weight: normal;
+	font-style: normal;
+}
+[class^="flaticon-"]:before, [class*=" flaticon-"]:before,
+[class^="flaticon-"]:after, [class*=" flaticon-"]:after {   
+	font-family: Flaticon;
+        font-size: 20px;
+font-style: normal;
+margin-left: 20px;
+}.flaticon-cinema151:before {
+	content: "\e000";
+}
+.flaticon-cinema152:before {
+	content: "\e001";
+}
+.flaticon-drummer5:before {
+	content: "\e002";
+}
+.flaticon-earphones57:before {
+	content: "\e003";
+}
+.flaticon-electronic64:before {
+	content: "\e004";
+}
+.flaticon-headphones68:before {
+	content: "\e005";
+}
+.flaticon-level15:before {
+	content: "\e006";
+}
+.flaticon-melody:before {
+	content: "\e007";
+}
+.flaticon-movie105:before {
+	content: "\e008";
+}
+.flaticon-multimedia-option252:before {
+	content: "\e009";
+}
+.flaticon-multimedia-option253:before {
+	content: "\e00a";
+}
+.flaticon-multimedia-option254:before {
+	content: "\e00b";
+}
+.flaticon-music297:before {
+	content: "\e00c";
+}
+.flaticon-musical-instrument148:before {
+	content: "\e00d";
+}
+.flaticon-musical-instrument149:before {
+	content: "\e00e";
+}
+.flaticon-musical-instrument150:before {
+	content: "\e00f";
+}
+.flaticon-musical-instrument151:before {
+	content: "\e010";
+}
+.flaticon-musical-instrument152:before {
+	content: "\e011";
+}
+.flaticon-musical-instrument153:before {
+	content: "\e012";
+}
+.flaticon-musical-instrument154:before {
+	content: "\e013";
+}
+.flaticon-musical-instrument155:before {
+	content: "\e014";
+}
+.flaticon-musical-instrument156:before {
+	content: "\e015";
+}
+.flaticon-musical-instrument157:before {
+	content: "\e016";
+}
+.flaticon-musical-instrument158:before {
+	content: "\e017";
+}
+.flaticon-musical-instrument159:before {
+	content: "\e018";
+}
+.flaticon-musical-instrument160:before {
+	content: "\e019";
+}
+.flaticon-musical-instrument161:before {
+	content: "\e01a";
+}
+.flaticon-musical-instrument162:before {
+	content: "\e01b";
+}
+.flaticon-music-player118:before {
+	content: "\e01c";
+}
+.flaticon-music-player119:before {
+	content: "\e01d";
+}
+.flaticon-music-player120:before {
+	content: "\e01e";
+}
+.flaticon-music-player121:before {
+	content: "\e01f";
+}
+.flaticon-music-player122:before {
+	content: "\e020";
+}
+.flaticon-music-player123:before {
+	content: "\e021";
+}
+.flaticon-music-player124:before {
+	content: "\e022";
+}
+.flaticon-music-player125:before {
+	content: "\e023";
+}
+.flaticon-music-player126:before {
+	content: "\e024";
+}
+.flaticon-protest12:before {
+	content: "\e025";
+}
+.flaticon-quaver56:before {
+	content: "\e026";
+}
+.flaticon-radio83:before {
+	content: "\e027";
+}
+.flaticon-radio84:before {
+	content: "\e028";
+}
+.flaticon-radio85:before {
+	content: "\e029";
+}
+.flaticon-resonator:before {
+	content: "\e02a";
+}
+.flaticon-sound80:before {
+	content: "\e02b";
+}
+.flaticon-sound81:before {
+	content: "\e02c";
+}
+.flaticon-speaker138:before {
+	content: "\e02d";
+}
+.flaticon-tool1201:before {
+	content: "\e02e";
+}
+.flaticon-volume19:before {
+	content: "\e02f";
+}
+.flaticon-wuaver:before {
+	content: "\e030";
+}
