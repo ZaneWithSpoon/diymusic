@@ -2,6 +2,7 @@ import { range } from 'lodash';
 import { toggleNote, updateHypermeasureName } from '../actions/actions'
 
 
+
 view PianoRoll {
   prop store
   prop instrument
@@ -13,6 +14,7 @@ view PianoRoll {
   let currentInstruments = ['C5', 'B4', 'A#4', 'A4', 'G#4', 'G4', 'F#4', 'F4',  'E4', 'D#4', 'D4', 'C#4']
   let x = 16
   let looping = range(x)
+
   let thing, hmi, hmData = {}
   let newName = ''
   let changingName = false
@@ -24,6 +26,7 @@ view PianoRoll {
  // console.log("chan")
  // console.log(channelId) 
 
+
   function toggleNameChange(){
     changingName = !changingName
   }
@@ -34,6 +37,7 @@ view PianoRoll {
     if(newName != ''){
       store.dispatch(updateHypermeasureName(focusedMeasure.id, newName))   
     }
+
   
   }
 
@@ -61,11 +65,13 @@ view PianoRoll {
     </title>
     <titleChange if={changingName}>
       <input defaultValue={focusedMeasure.name} sync={newName} onEnter={() => changeName(newName)} />
+
     </titleChange>
    <table>
      <tbody>
        <tr repeat={currentInstruments} >
          <td class='instruments' onClick={() => playNote(_, instrument) }> {_} </td>
+
          {looping.map(i =>
             <td key = {i} onClick={() => toggleActive( i, _ )}>
               <ClickableSquare className={getClass( i, _ )}/>
@@ -76,16 +82,19 @@ view PianoRoll {
    </table>
   </pianoRoll>
 
+
   $table = {
     borderSpacing: 0,
     width: '100%'
   }
+
 
   $instruments = {
     border: 'solid',
     borderWidth: 1,
     width: 60
   }
+
 
   $td = {
     padding: 0

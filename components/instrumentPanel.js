@@ -1,5 +1,6 @@
 import { addHypermeasure, addInstrument } from '../actions/actions'
 
+
 view InstrumentPanel {
 
   prop store
@@ -20,7 +21,6 @@ view InstrumentPanel {
   })
 
 
-  //console.log(channelIds)
 
   function addInstrumentLoop(sampleType, channelId) {
     let hm = {}

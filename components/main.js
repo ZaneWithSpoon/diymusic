@@ -256,16 +256,7 @@ view Main {
     playingBeat, playNote, channels,
     toggleChecked
   }} />
-  // <PianoRoll {...{
-  //   store, 
-  //   focusedMeasure: { 
-  //     name:'test', 
-  //     id: 'fjwod',
-  //     sampleType: 'midi',
-  //     hypermeasures: []
-  //   },
-  //   playNote, playingBeat, channelId: 'dnfjfn'
-  // }}/>
+
 
 
 

@@ -97,6 +97,7 @@ function channels(state = [], action) {
 
       if(newChannel.sampleType === 'drumpad'){
 
+
         newChannel.hypermeasures.push({
             id: action.loopId,
             size: 16,

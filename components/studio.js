@@ -22,6 +22,7 @@ view Studio {
   let instrument = ''
 
 
+
   on.props(() => {
     focusedMeasure = setFocusedMeasure(id)
   }) 
@@ -34,6 +35,7 @@ view Studio {
           temp = loop
           focusedChannelId = channel.id
           instrument = channel.instrument
+
         }
       })
     })
@@ -50,6 +52,7 @@ view Studio {
     viewState = 'pr'
     id = newID
     focusedMeasure = setFocusedMeasure(id)
+
   }
 
   function switchToTimeline() {

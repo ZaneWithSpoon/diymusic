@@ -23,6 +23,7 @@ view DrumPad {
  // console.log("chan")
  // console.log(channelId) 
 
+
   function toggleNameChange(){
     changingName = !changingName
   }
