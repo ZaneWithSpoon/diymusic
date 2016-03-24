@@ -37,7 +37,7 @@ view InstrumentPanel {
     console.log('Add channel')
 
     //change this to allow for more instruments
-    var back = store.dispatch(addInstrument('xylophone'))
+    var back = store.dispatch(addInstrument('acoustic_grand_piano'))
   }
 
 

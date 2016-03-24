@@ -45,7 +45,7 @@ view Main {
     song = store.getState()
     channels = song.channels
 
-    console.log(channels)
+    //console.log(channels)
 
     view.update()
   }
