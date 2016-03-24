@@ -22,6 +22,22 @@ function songData( state = { name:'title', bpm:120 }, action) {
 function channels(state = [], action) {
 
   switch (action.type) {
+    case 'ADD_CHANNEL':
+      var newChannel = {  id:action.id,
+                              name: action.name,
+                              instrument: action.instrument,
+                              sampleType: 'pianoRoll',
+                              hypermeasures: [] }
+
+      var empty = new Array
+      for(i = 0; i < 16; i++){
+        empty.push(new Array)
+      }
+
+      return [...state, newChannel]
+
+      break
+
     case 'ADD_DEFAULT_HYPERMEASURE':
 
       var initialChannel = {  id:action.channelId,
@@ -72,12 +88,14 @@ function channels(state = [], action) {
 
       var newChannel = Object.assign({}, state[index])
 
+        //creating empty array of arrays (2d matrix)
+        var empty = new Array
+        for(i = 0; i < 16; i++){
+          empty.push(new Array)
+        }
+
+
       if(newChannel.sampleType === 'drumpad'){
-          //creating empty array of arrays (2d matrix)
-          var empty = new Array
-          for(i = 0; i < 16; i++){
-            empty.push(new Array)
-          }
 
         newChannel.hypermeasures.push({
             id: action.loopId,
@@ -87,8 +105,14 @@ function channels(state = [], action) {
             name: action.name
         })
 
-      } else if (newChannel.sampleType === 'pianoroll') {
+      } else if (newChannel.sampleType === 'pianoRoll') {
         //TODO: make different matrix for piano
+        newChannel.hypermeasures.push({
+            id: action.loopId,
+            size: 16,
+            notes: empty,
+            name: action.name
+        })
       }
 
       return [

@@ -19,6 +19,7 @@ view Studio {
   let focusedMeasure = setFocusedMeasure(id)
   toggleChecked(id)
   let focusedChannelId = ''
+  let instrument = ''
 
 
   on.props(() => {
@@ -32,6 +33,7 @@ view Studio {
         if(loop.id === newId){
           temp = loop
           focusedChannelId = channel.id
+          instrument = channel.instrument
         }
       })
     })
@@ -45,8 +47,9 @@ view Studio {
   }
 
   function switchToPianoRoll(newID) {
-    id = newID
     viewState = 'pr'
+    id = newID
+    focusedMeasure = setFocusedMeasure(id)
   }
 
   function switchToTimeline() {
@@ -73,14 +76,19 @@ view Studio {
       <Timeline />
     </timeline>
     <InstrumentPanel {...{store, 
-      switchToDrumpad, switchToTimeline,
+      switchToDrumpad, switchToPianoRoll, switchToTimeline,
       viewState, isChecked, toggleChecked,
       channels
     }} />
-    <DrumPad {...{store,
+    <DrumPad if={viewState == 'dp'} {...{store,
       focusedMeasure, playPrecussion,
       playingBeat, channelId: focusedChannelId
     }} />
+    <PianoRoll if={viewState == 'pr'} {...{store,
+      focusedMeasure, playNote, instrument,
+      playingBeat, channelId: focusedChannelId
+    }} />
+
 
   </studio>
 

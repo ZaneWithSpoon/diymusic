@@ -32,7 +32,7 @@ export const addDrums = () => {
 export const addInstrument = (instrument) => {
   return dispatch => {
     let id = Math.random().toString(36).substr(2, 9)
-    let name = instrument
+    let name = 'piano'
     dispatch(addChannel(id, name, instrument))
     return {id, name}
   }

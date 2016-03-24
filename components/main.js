@@ -45,7 +45,7 @@ view Main {
     song = store.getState()
     channels = song.channels
 
-    //console.log(channels)
+    console.log(channels)
 
     view.update()
   }
@@ -93,6 +93,12 @@ view Main {
   }
 
   function playNote(note, instrument) {
+    console.log('play note')
+
+    console.log(note)
+    console.log(instrument)
+
+
     let inst = soundfont.instrument(instrument)
     inst.onready(function() {
       inst.play(note, 0)
@@ -157,7 +163,7 @@ view Main {
           sampleType: channels[i].sampleType, 
           notes: empty
         })        
-      } else if(channels[i].sampleType === 'pianoroll'){
+      } else if(channels[i].sampleType === 'pianoRoll'){
         concentratedNotes.push({
           sampleType: channels[i].sampleType, 
           instrument: channels[i].instrument,

@@ -1,25 +1,28 @@
 import { range } from 'lodash';
+import { toggleNote, updateHypermeasureName } from '../actions/actions'
 
 
 view PianoRoll {
   prop store
+  prop instrument
   prop focusedMeasure
   prop playNote
   prop playingBeat
   prop channelId
 
-  //TODO: reorder notes
-  let currentInstruments = ['C5', 'B4', 'A#4', 'A4', 'G#4', 'G4', 'F#4', 'F4', 'E4', 'D#4', 'D4', 'C#4', 'C4' ]
-  let looping = range(16)
+  let currentInstruments = ['C5', 'B4', 'A#4', 'A4', 'G#4', 'G4', 'F#4', 'F4',  'E4', 'D#4', 'D4', 'C#4']
+  let x = 16
+  let looping = range(x)
   let thing, hmi, hmData = {}
   let newName = ''
   let changingName = false
 
-
+  //console.log("meas")
   console.log(focusedMeasure)
-  console.log(playingBeat)
-  console.log(channelId)
-
+  //console.log("play")
+  //console.log(playingBeat)
+ // console.log("chan")
+ // console.log(channelId) 
 
   function toggleNameChange(){
     changingName = !changingName
@@ -28,8 +31,9 @@ view PianoRoll {
   function changeName(newName){
     console.log(newName)
     changingName = !changingName
-    if(newName != '')
-      hmData.name = newName
+    if(newName != ''){
+      store.dispatch(updateHypermeasureName(focusedMeasure.id, newName))   
+    }
   
   }
 
@@ -47,27 +51,12 @@ view PianoRoll {
 
   }
 
-  // function toggleActive(index, instrument) {
-  //   store.dispatch(toggleNote(channelId, focusedMeasure.id, index, instrument))
-  // }
-
   function toggleActive(index, instrument) {
-
-    if(getClass(index, instrument) != 'clicked') {
-      console.log('noteAdd')
-      store.dispatch(addBeatNote(id, instrument, index))
-      hmData.notes[index].push(instrument)
-    } else {
-      console.log('noteRemove')
-      store.dispatch(removeBeatNote(id, instrument, index))
-      var instIndex = currentInstruments.indexOf(instrument)
-      hmData.notes[index].splice(instIndex, 1)
-    }
-
+    store.dispatch(toggleNote(channelId, focusedMeasure.id, index, instrument))
   }
 
   <pianoRoll>
-   <title if={!changingName} onClick={toggleNameChange}>
+    <title if={!changingName} onClick={toggleNameChange}>
       {focusedMeasure.name}
     </title>
     <titleChange if={changingName}>
@@ -76,7 +65,7 @@ view PianoRoll {
    <table>
      <tbody>
        <tr repeat={currentInstruments} >
-         <td class={setColor(_)} onClick={() => playNote(_, 'acoustic_grand_piano') }> {_} </td>
+         <td class='instruments' onClick={() => playNote(_, instrument) }> {_} </td>
          {looping.map(i =>
             <td key = {i} onClick={() => toggleActive( i, _ )}>
               <ClickableSquare className={getClass( i, _ )}/>
@@ -87,44 +76,15 @@ view PianoRoll {
    </table>
   </pianoRoll>
 
-  
-
-  function setColor(instrument) {
-  if(instrument.indexOf('#') != -1){
-      return 'black'
-    } else {
-      return 'white'
-    }
-  }
-
-
   $table = {
     borderSpacing: 0,
     width: '100%'
-  }
-
-  $tableWrap = {
-    height: 575,
-    overflow: 'auto'
   }
 
   $instruments = {
     border: 'solid',
     borderWidth: 1,
     width: 60
-  }
-  $white = {
-    background: 'white',
-    width: 75,
-    border: 'solid'
-  }
-  $black = {
-    background: 'black',
-    color: 'white',
-    width: 5,
-    border: 'solid'
-
-
   }
 
   $td = {

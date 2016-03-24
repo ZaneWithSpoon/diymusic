@@ -1,9 +1,10 @@
-import { addHypermeasure } from '../actions/actions'
+import { addHypermeasure, addInstrument } from '../actions/actions'
 
 view InstrumentPanel {
 
   prop store
   prop switchToDrumpad
+  prop switchToPianoRoll
   prop viewState
   prop switchToTimeline
   prop isChecked
@@ -27,8 +28,16 @@ view InstrumentPanel {
       hm = store.dispatch(addHypermeasure(channelId)) 
       switchToDrumpad(hm.loopId)
     } else {
-      console.log(instrument)
+      hm = store.dispatch(addHypermeasure(channelId))
+      switchToPianoRoll(hm.loopId)
     }
+  }
+
+  function addChannel(){
+    console.log('Add channel')
+
+    //change this to allow for more instruments
+    var back = store.dispatch(addInstrument('xylophone'))
   }
 
 
@@ -61,8 +70,8 @@ view InstrumentPanel {
       </tbody>
     </table>
 
-    <another>
-      another one
+    <another onClick={() => addChannel()}>
+      click here to add piano
     </another>
 
   </instrumentPanel>
