@@ -95,8 +95,8 @@ view Main {
   function playNote(note, instrument) {
     console.log('play note')
 
-    console.log(note)
-    console.log(instrument)
+    // console.log(note)
+    // console.log(instrument)
 
 
     let inst = soundfont.instrument(instrument)
@@ -127,13 +127,15 @@ view Main {
     beatWait = []
   }
 
-  function updateLater() { setTimeout(() => view.update(),  100) }
+  function updateLater() { setTimeout(() => view.update(),  50) }
   
   // done because of likely bug in audio api
   // where view.set overstimulates audio
   // so temporarily turn off flint
 
   function renderAudio(i) {
+
+    //console.log(i)
 
     concentratedNotes.map(channel => {
       if(channel.sampleType == 'drumpad'){
@@ -151,12 +153,13 @@ view Main {
   function loadCurrentHypermeasures() {
 
     concentratedNotes = []
-    let empty = []
-    for(i = 0; i < 16; i++){
-      empty.push(new Array)
-    }
-
+    
     for(i = 0; i < channels.length; i++){
+
+      let empty = []
+      for(j = 0; j < 16; j++){
+        empty.push(new Array)
+      }
 
       if(channels[i].sampleType === 'drumpad'){
         concentratedNotes.push({
@@ -183,6 +186,7 @@ view Main {
         })
       })
 
+
     }
 
   }
@@ -200,13 +204,16 @@ view Main {
   }
 
   function incrementPlayingBeat() {
-    playingBeat++
+    if(playingBeat === 15){
+      playingBeat = 0
+    }else {
+      playingBeat++
+    }
 
     renderAudio(playingBeat)
 
     if(playingBeat >= 15){
       loadCurrentHypermeasures()
-      playingBeat = -1
     } 
     
     beatWait.push(setTimeout(() => incrementPlayingBeat(), speed))
@@ -233,7 +240,7 @@ view Main {
   function onChangeBpm(newBpm) {
     console.log('changed bpm in func')
     bpm = newBpm
-    speed = 60000 / bpm /Z
+    speed = 60000 / bpm /2
     view.update()
   }
 

@@ -99,7 +99,7 @@ view InstrumentPanel {
   //TODO: make the size of titles fixed
   //undo shitty naming in actions
   $instrumTitle = {
-    width: 200,
+    width: 100,
     wordWrap: 'break-word'
   }
 

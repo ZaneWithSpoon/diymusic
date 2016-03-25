@@ -11,20 +11,13 @@ view PianoRoll {
   prop playingBeat
   prop channelId
 
-  let currentInstruments = ['C5', 'B4', 'A#4', 'A4', 'G#4', 'G4', 'F#4', 'F4',  'E4', 'D#4', 'D4', 'C#4', 'C4']
+  let currentInstruments = [ 'C7', 'C6', 'C5', 'B4', 'A#4', 'A4', 'G#4', 'G4', 'F#4', 'F4',  'E4', 'D#4', 'D4', 'C#4', 'C4', 'C3', 'C2', 'C1']
   let x = 16
   let looping = range(x)
 
   let thing, hmi, hmData = {}
   let newName = ''
   let changingName = false
-
-  //console.log("meas")
-  console.log(focusedMeasure)
-  //console.log("play")
-  //console.log(playingBeat)
- // console.log("chan")
- // console.log(channelId) 
 
 
   function toggleNameChange(){
@@ -61,7 +54,7 @@ view PianoRoll {
 
   <pianoRoll>
     <title if={!changingName} onClick={toggleNameChange}>
-      {focusedMeasure.name}
+      {instrument}
     </title>
     <titleChange if={changingName}>
       <input defaultValue={focusedMeasure.name} sync={newName} onEnter={() => changeName(newName)} />
