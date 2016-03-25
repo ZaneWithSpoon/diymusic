@@ -1,4 +1,4 @@
-import { addPremadeBeatHypermeasure } from '../actions/actions'
+import { addPremadeBeatHypermeasure, addInstrument } from '../actions/actions'
 
 view Studio { 
 
@@ -21,7 +21,7 @@ view Studio {
   let focusedChannelId = ''
   let instrument = ''
 
-
+  store.dispatch(addInstrument('acoustic_grand_piano'))
 
   on.props(() => {
     focusedMeasure = setFocusedMeasure(id)

@@ -32,7 +32,7 @@ export const addDrums = () => {
 export const addInstrument = (instrument) => {
   return dispatch => {
     let id = Math.random().toString(36).substr(2, 9)
-    let name = 'piano'
+    let name = instrument.slice(-6,instrument.length)
     dispatch(addChannel(id, name, instrument))
     return {id, name}
   }
@@ -42,7 +42,7 @@ export const addHypermeasure = (channelId) => {
   return dispatch => {
     //generating a unique ID for this Hypemeasure
     let loopId = Math.random().toString(36).substr(2, 9)
-    let name = 'unnamed'
+    let name = 'newLoop'
     dispatch(addHypermeasureId(channelId, loopId, name))
     return {loopId, name}
   }

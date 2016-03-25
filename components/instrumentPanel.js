@@ -1,4 +1,5 @@
 import { addHypermeasure, addInstrument } from '../actions/actions'
+import jquery from 'jquery'
 
 
 view InstrumentPanel {
@@ -11,6 +12,9 @@ view InstrumentPanel {
   prop toggleChecked
   prop channels
 
+  let newInstrum = false
+  let chosenInstrum = ''
+  let options = []
 
   let channelIds = []  
   on.props(() => {
@@ -19,6 +23,10 @@ view InstrumentPanel {
     })
   })
 
+  jquery.getJSON("../assets/instrumentList.json", function(json) {
+    options = json.instruments
+    console.log(options)
+  })
 
 
   function addInstrumentLoop(sampleType, channelId) {
@@ -30,22 +38,27 @@ view InstrumentPanel {
 
   function addChannel(){
     console.log('Add channel')
+    newInstrum = true
 
-    //change this to allow for more instruments
-    var back = store.dispatch(addInstrument('acoustic_grand_piano'))
+  }
+
+  function chooseInstrum(instrum){
+    newInstrum = false
+    var back = store.dispatch(addInstrument(instrum))
   }
 
 
   <instrumentPanel>
-
+  {/*
     <back if={viewState !== 'tl'} onClick={switchToTimeline}>
       back
     </back>
-    <title>instrument panel </title>
+  */}
+    <title>Instrument panel </title>
     <table>
       <tbody>
         <tr repeat={channels} >
-          <td key={_.name}> {_.name} </td>
+          <td class={'instrumTitle'} key={_.name}> {_.name} </td>
           {_.hypermeasures.map( i =>
             <td key={i.id} >
               <Hypermeasures 
@@ -66,14 +79,28 @@ view InstrumentPanel {
     </table>
 
     <another onClick={() => addChannel()}>
-      click here to add piano
+      click here to add more instruments
     </another>
+
+    <selecting if={newInstrum}>
+      pick an instrument
+      <possibilities repeat={options} onClick={() => chooseInstrum(_)}>
+        {_}
+      </possibilities>
+    </selecting>
 
   </instrumentPanel>
 
 
   $back = {
     color: 'white'
+  }
+
+  //TODO: make the size of titles fixed
+  //undo shitty naming in actions
+  $instrumTitle = {
+    width: 200,
+    wordWrap: 'break-word'
   }
 
 }
