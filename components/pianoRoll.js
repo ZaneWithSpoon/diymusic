@@ -11,7 +11,7 @@ view PianoRoll {
   prop playingBeat
   prop channelId
 
-  let currentInstruments = ['C5', 'B4', 'A#4', 'A4', 'G#4', 'G4', 'F#4', 'F4',  'E4', 'D#4', 'D4', 'C#4']
+  let currentInstruments = ['C5', 'B4', 'A#4', 'A4', 'G#4', 'G4', 'F#4', 'F4',  'E4', 'D#4', 'D4', 'C#4', 'C4']
   let x = 16
   let looping = range(x)
 

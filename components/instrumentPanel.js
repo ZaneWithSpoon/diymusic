@@ -4,8 +4,7 @@ import { addHypermeasure, addInstrument } from '../actions/actions'
 view InstrumentPanel {
 
   prop store
-  prop switchToDrumpad
-  prop switchToPianoRoll
+  prop changeFocus
   prop viewState
   prop switchToTimeline
   prop isChecked
@@ -24,13 +23,9 @@ view InstrumentPanel {
 
   function addInstrumentLoop(sampleType, channelId) {
     let hm = {}
-    if(sampleType === 'drumpad'){
       hm = store.dispatch(addHypermeasure(channelId)) 
-      switchToDrumpad(hm.loopId)
-    } else {
-      hm = store.dispatch(addHypermeasure(channelId))
-      switchToPianoRoll(hm.loopId)
-    }
+      changeFocus(hm.loopId)
+
   }
 
   function addChannel(){
@@ -55,7 +50,7 @@ view InstrumentPanel {
             <td key={i.id} >
               <Hypermeasures 
                 loop={i}
-                focus={() => {switchToDrumpad(i.id)}}
+                focus={() => {changeFocus(i.id)}}
                 options={() => {console.log('options')}}
                 checked={isChecked(i.id)}
                 toggleChecked={toggleChecked}/>

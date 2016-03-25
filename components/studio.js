@@ -42,18 +42,16 @@ view Studio {
     return temp
   }
 
-  function switchToDrumpad(newID) {
+  function changeFocus(newID) {
+    console.log('changeFocus')
     id = newID
     focusedMeasure = setFocusedMeasure(id)
-    viewState = 'dp'
+    if(instrument == undefined)
+      viewState = 'dp'
+    else
+      viewState = 'pr'
   }
 
-  function switchToPianoRoll(newID) {
-    viewState = 'pr'
-    id = newID
-    focusedMeasure = setFocusedMeasure(id)
-
-  }
 
   function switchToTimeline() {
     viewState = 'tl'
@@ -79,7 +77,7 @@ view Studio {
       <Timeline />
     </timeline>
     <InstrumentPanel {...{store, 
-      switchToDrumpad, switchToPianoRoll, switchToTimeline,
+      changeFocus, switchToTimeline,
       viewState, isChecked, toggleChecked,
       channels
     }} />
