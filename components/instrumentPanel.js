@@ -25,7 +25,6 @@ view InstrumentPanel {
 
   jquery.getJSON("../assets/instrumentList.json", function(json) {
     options = json.instruments
-    console.log(options)
   })
 
 
@@ -37,7 +36,7 @@ view InstrumentPanel {
   }
 
   function addChannel(){
-    console.log('Add channel')
+    //console.log('Add channel')
     newInstrum = true
 
   }

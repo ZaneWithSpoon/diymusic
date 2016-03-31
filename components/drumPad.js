@@ -16,13 +16,6 @@ view DrumPad {
   let newName = ''
   let changingName = false
 
-  //console.log("meas")
-  console.log(focusedMeasure)
-  //console.log("play")
-  //console.log(playingBeat)
- // console.log("chan")
- // console.log(channelId) 
-
 
   function toggleNameChange(){
     changingName = !changingName

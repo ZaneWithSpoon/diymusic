@@ -43,7 +43,7 @@ view Studio {
   }
 
   function changeFocus(newID) {
-    console.log('changeFocus')
+    //console.log('changeFocus')
     id = newID
     focusedMeasure = setFocusedMeasure(id)
     if(instrument == undefined)

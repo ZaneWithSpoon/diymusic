@@ -93,7 +93,7 @@ view Main {
   }
 
   function playNote(note, instrument) {
-    console.log('play note')
+    //console.log('play note')
 
     // console.log(note)
     // console.log(instrument)
