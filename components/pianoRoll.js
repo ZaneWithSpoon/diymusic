@@ -1,15 +1,15 @@
 import { range } from 'lodash';
-import { toggleNote, updateHypermeasureName } from '../actions/actions'
 
 
 
 view PianoRoll {
-  prop store
   prop instrument
   prop focusedMeasure
   prop playNote
   prop playingBeat
   prop channelId
+  prop toggleNote
+
 
   let currentInstruments = [ 'C7', 'C6', 'C5', 'B4', 'A#4', 'A4', 'G#4', 'G4', 'F#4', 'F4',  'E4', 'D#4', 'D4', 'C#4', 'C4', 'C3', 'C2', 'C1']
   let x = 16
@@ -49,7 +49,7 @@ view PianoRoll {
   }
 
   function toggleActive(index, instrument) {
-    store.dispatch(toggleNote(channelId, focusedMeasure.id, index, instrument))
+    toggleNote(channelId, focusedMeasure.id, index, instrument)
   }
 
   <pianoRoll>
@@ -67,7 +67,7 @@ view PianoRoll {
 
          {looping.map(i =>
             <td key = {i} onClick={() => toggleActive( i, _ )}>
-              <ClickableSquare className={getClass( i, _ )}/>
+              <block class={getClass( i, _ )}/>
             </td>
           )}
        </tr>
@@ -96,4 +96,32 @@ view PianoRoll {
   $tr = {
     padding: 0
   }
+
+
+
+
+    $even = {
+    background: 'darkGray'
+  }
+
+  $odd = {
+    background: 'gray'
+  }
+
+  $clicked = {
+    background: '#d81cd8'
+  }
+
+  $playing = {
+    background: '#FE621D'
+  }
+
+  $block = {
+    margin: 0,
+    height: 50,
+    border: 'solid',
+    borderWidth: 1,
+  }
+
+  
 }

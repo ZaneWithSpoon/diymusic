@@ -1,8 +1,7 @@
-import { addPremadeBeatHypermeasure, addInstrument } from '../actions/actions'
+//import { addPremadeBeatHypermeasure, addInstrument } from '../actions/actions'
 
 view Studio { 
 
-  prop store
   prop speed
   prop repeating
   prop playPrecussion
@@ -11,21 +10,21 @@ view Studio {
   prop checkedHypermeasures
   prop toggleChecked
   prop channels
+  prop toggleNote
+
+  prop addHypermeasure
+  prop addInstrument
 
   //TODO: make a way to update names in instrument panel
   //when changes in drumpad and vice versa
 
-  let id = store.dispatch(addPremadeBeatHypermeasure())
-  let focusedMeasure = setFocusedMeasure(id)
-  toggleChecked(id)
-  let focusedChannelId = ''
-  let instrument = ''
 
-  store.dispatch(addInstrument('acoustic_grand_piano'))
 
-  on.props(() => {
-    focusedMeasure = setFocusedMeasure(id)
-  }) 
+  let focusedChannelId = channels[0].id
+  let focusedId = channels[0].hypermeasures[0].id
+  let focusedMeasure = channels[0].hypermeasures[0]
+
+  //console.log(focusedChannelId)
 
   function setFocusedMeasure(newId) {
     let temp = {}
@@ -73,21 +72,27 @@ view Studio {
 
 
   <studio>
+ 
     <timeline if={viewState == 'tl'}>
       <Timeline />
     </timeline>
-    <InstrumentPanel {...{store, 
+    <InstrumentPanel {...{ 
       changeFocus, switchToTimeline,
       viewState, isChecked, toggleChecked,
-      channels
+      channels, addHypermeasure, addInstrument
     }} />
-    <DrumPad if={viewState == 'dp'} {...{store,
+
+
+
+    <DrumPad if={viewState == 'dp'} {...{
       focusedMeasure, playPrecussion,
-      playingBeat, channelId: focusedChannelId
+      playingBeat, channelId: focusedChannelId,
+      toggleNote
     }} />
-    <PianoRoll if={viewState == 'pr'} {...{store,
+    <PianoRoll if={viewState == 'pr'} {...{
       focusedMeasure, playNote, instrument,
-      playingBeat, channelId: focusedChannelId
+      playingBeat, channelId: focusedChannelId,
+      toggleNote
     }} />
 
 

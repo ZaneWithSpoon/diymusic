@@ -1,18 +1,8 @@
 //diym ( diy music ) built by Zane Witherspoon
 
-import { createStore, applyMiddleware } from 'redux'
-import thunkMiddleware from 'redux-thunk'
-import createLogger from 'redux-logger'
-import { diymApp } from '../reducers/reducers'
 import Soundfont from 'soundfont-player'
+import sugar from 'sugar'
 
-const loggerMiddleware = createLogger()
-const createStoreWithMiddleware = applyMiddleware(
-//  loggerMiddleware, // neat middleware that logs actions
-  thunkMiddleware // lets us dispatch() functions
-)(createStore)
-
-const store = createStoreWithMiddleware(diymApp)
 
 const ctx = new (window.AudioContext || window.webkitAudioContext)
 const soundfont = new Soundfont(ctx)
@@ -21,10 +11,6 @@ const soundfont = new Soundfont(ctx)
 //main.js
 view Main {
   view.pause()
-
-  //defining initial state variables
-  let song = store.getState()
-  let channels = song.channels
 
 
   //Defning default variables
@@ -39,16 +25,153 @@ view Main {
   let playingBeat = -1
   let beatWait = []
 
-  store.subscribe(updateSong)
+  let songData = newSong()
+  let channels = []
+  channels.push(songData)
+  toggleChecked(songData.hypermeasures[0].id)
 
-  function updateSong(){
-    song = store.getState()
-    channels = song.channels
+  addInstrument('acoustic_grand_piano')
 
-    //console.log(channels)
 
-    view.update()
+
+  function toggleNote(channelId, measureId, index, instrument){
+
+    for(i = 0; i < channels.length; i++){
+      //console.log(channels[i])
+      if(channels[i].id === channelId){
+        for(j = 0; j < channels[i].hypermeasures.length; j++){
+          //console.log(channels[i].hypermeasures[j])
+          if(channels[i].hypermeasures[j].id === measureId){
+            //console.log('inner if')
+            let found = -1
+            for(k = 0; k < channels[i].hypermeasures[j].notes[index].length; k++){
+              if(instrument === channels[i].hypermeasures[j].notes[index][k]){
+                found = k
+              }
+            }
+            if(found === -1){
+              channels[i].hypermeasures[j].notes[index].push(instrument)
+            } else {
+              channels[i].hypermeasures[j].notes[index].splice(found, 1)
+            }
+          }
+        }
+      }
+    }
+
+    updateLater()
   }
+
+
+
+  function newSong(){
+
+    let channelId = Math.random().toString(36).substr(2, 9)
+
+    let initialChannel = {  id:channelId,
+                              name:'drums',
+                              sampleType:'drumPad',
+                              hypermeasures: [] }
+
+
+
+      //creating empty 2d matrix to represent grid
+      let empty = new Array
+      for(i = 0; i < 16; i++){
+        empty.push(new Array)
+      }
+
+      //to make a more interesting start\
+
+      for(i = 0; i < 16; i++){
+        empty[i].push('hat')
+      }
+
+      empty[0].push('kick')
+      empty[3].push('kick')
+      empty[7].push('kick')
+      empty[11].push('kick')
+      empty[14].push('kick')
+      empty[4].push('snare')
+      empty[12].push('snare')
+      empty[1].push('tom')
+      empty[9].push('tom')
+
+      let hmId = Math.random().toString(36).substr(2, 9)
+
+      initialChannel.hypermeasures.push({
+          id: hmId,
+          size: 16,
+          instruments: ['kick', 'snare', 'tom', 'hat'],
+          notes: empty,
+          name: 'premade'
+        })
+
+      return initialChannel
+  }
+
+  function addHypermeasure(channelId){
+
+    let loopId = Math.random().toString(36).substr(2, 9)
+    let sampleType = ''
+    let index = -1
+
+
+    for(i = 0; i < channels.length; i++){
+      if(channels[i].id === channelId){
+        sampleType = channels[i].sampleType
+        index = i
+      }
+    }
+
+    //creating empty array of arrays (2d matrix)
+    let empty = new Array
+    for(i = 0; i < 16; i++){
+      empty.push(new Array)
+    }
+
+    if(sampleType === 'drumPad'){
+
+      channels[index].hypermeasures.push({
+          id: loopId,
+          size: 16,
+          instruments: ['kick', 'snare', 'tom', 'hat'],
+          notes: empty,
+          name: 'newLoop'
+      })
+    } else if (sampleType === 'pianoRoll') {
+
+      channels[index].hypermeasures.push({
+          id: loopId,
+          size: 16,
+          notes: empty,
+          name: 'newLoop'
+      })
+    }
+
+    return loopId
+
+    updateLater()
+
+  }
+
+  function addInstrument(instrum) {
+    let channelId = Math.random().toString(36).substr(2, 9)
+
+
+      var newChannel = {  id:channelId,
+                              name: instrum.slice(-6,instrum.length),
+                              instrument: instrum,
+                              sampleType: 'pianoRoll',
+                              hypermeasures: [] }
+
+
+     channels.push(newChannel)                       
+
+     updateLater()
+  }
+
+
 
   function toggleChecked(id){
     let index = checkedHypermeasures.indexOf(id)
@@ -117,6 +240,7 @@ view Main {
 
     sourceBuffer.start()  
 
+    setTimeout(sourceBuffer.start(), 500)
     
   }
 
@@ -127,7 +251,7 @@ view Main {
     beatWait = []
   }
 
-  function updateLater() { setTimeout(() => view.update(),  50) }
+  function updateLater() { setTimeout(() => view.update(),  20) }
   
   // done because of likely bug in audio api
   // where view.set overstimulates audio
@@ -138,7 +262,7 @@ view Main {
     //console.log(i)
 
     concentratedNotes.map(channel => {
-      if(channel.sampleType == 'drumpad'){
+      if(channel.sampleType == 'drumPad'){
         channel.notes[i].map( instrument =>
           playPrecussion(instrument)
         )
@@ -161,7 +285,7 @@ view Main {
         empty.push(new Array)
       }
 
-      if(channels[i].sampleType === 'drumpad'){
+      if(channels[i].sampleType === 'drumPad'){
         concentratedNotes.push({
           sampleType: channels[i].sampleType, 
           notes: empty
@@ -254,17 +378,18 @@ view Main {
 
 
   <Header {...{
-    store, bpm, speed, runState,
+    bpm, speed, runState,
     onChangeBpm,
     onPlay, onPause, onStop
   }} />
   <Studio {...{
-    store, speed, playPrecussion, checkedHypermeasures,
+    speed, playPrecussion, checkedHypermeasures,
     playingBeat, playNote, channels,
-    toggleChecked
+    toggleChecked, toggleNote, 
+    addHypermeasure, addInstrument
   }} />
 
-
+  //<h1>Main</h1>
 
 
   //Style

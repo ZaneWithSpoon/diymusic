@@ -1,16 +1,17 @@
-import { addHypermeasure, addInstrument } from '../actions/actions'
 import jquery from 'jquery'
 
 
 view InstrumentPanel {
 
-  prop store
   prop changeFocus
   prop viewState
   prop switchToTimeline
   prop isChecked
   prop toggleChecked
   prop channels
+
+  prop addHypermeasure
+  prop addInstrument
 
   let newInstrum = false
   let chosenInstrum = ''
@@ -28,10 +29,9 @@ view InstrumentPanel {
   })
 
 
-  function addInstrumentLoop(sampleType, channelId) {
-    let hm = {}
-      hm = store.dispatch(addHypermeasure(channelId)) 
-      changeFocus(hm.loopId)
+  function addInstrumentLoop(channelId) {
+      
+      changeFocus(addHypermeasure(channelId))
 
   }
 
@@ -43,7 +43,7 @@ view InstrumentPanel {
 
   function chooseInstrum(instrum){
     newInstrum = false
-    var back = store.dispatch(addInstrument(instrum))
+    var back = addInstrument(instrum)
   }
 
 
@@ -68,7 +68,7 @@ view InstrumentPanel {
                 toggleChecked={toggleChecked}/>
             </td>
           )}
-          <td onClick={() => addInstrumentLoop(_.sampleType, _.id)}>
+          <td onClick={() => addInstrumentLoop(_.id)}>
             <Hypermeasures
               loop='undefined'
               instrument={_.instrument}/>

@@ -1,13 +1,13 @@
 import { range } from 'lodash';
-import { toggleNote, updateHypermeasureName } from '../actions/actions'
+//import { toggleNote, updateHypermeasureName } from '../actions/actions'
 
 
 view DrumPad {
-  prop store
   prop focusedMeasure
   prop playPrecussion
   prop playingBeat
   prop channelId
+  prop toggleNote
 
   let currentInstruments = ['kick', 'snare', 'tom', 'hat']
   let x = 16
@@ -45,7 +45,7 @@ view DrumPad {
   }
 
   function toggleActive(index, instrument) {
-    store.dispatch(toggleNote(channelId, focusedMeasure.id, index, instrument))
+    toggleNote(channelId, focusedMeasure.id, index, instrument)
   }
 
   <drumPad>
@@ -61,7 +61,7 @@ view DrumPad {
          <td class='instruments' onClick={() => playPrecussion(_) }> {_} </td>
          {looping.map(i =>
             <td key = {i} onClick={() => toggleActive( i, _ )}>
-              <ClickableSquare className={getClass( i, _ )}/>
+              <block class={getClass( i, _ )}/>
             </td>
           )}
        </tr>
@@ -87,4 +87,32 @@ view DrumPad {
   $tr = {
     padding: 0
   }
+
+
+  $even = {
+    background: 'darkGray'
+  }
+
+  $odd = {
+    background: 'gray'
+  }
+
+  $clicked = {
+    background: '#d81cd8'
+  }
+
+  $playing = {
+    background: '#FE621D'
+  }
+
+  $block = {
+    margin: 0,
+    height: 50,
+    border: 'solid',
+    borderWidth: 1,
+  }
+
+
+
+
 }
