@@ -60,7 +60,7 @@ view Hypermeasures {
       </selectDiv>
       <optionsDiv>
         <checkDiv onClick={() => {changeChecked(loop.id)}}>
-          <img if={checked} src="../assets/basic-ui/png/basic14.png" draggable='false' height='75%' width='75%'/>
+          <img if={checked} src="../assets/used-assets/basic14.png" draggable='false' height='75%' width='75%'/>
         </checkDiv>
         <menuDiv onClick={() => {showBox()}}>
           .....

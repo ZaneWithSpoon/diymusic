@@ -81,7 +81,7 @@ view InstrumentPanel {
           )}
 
           <td class={'addButton'} onClick={() => addInstrumentLoop(_.id)}>
-            <img class={'plus'} src="../assets/basic-ui/png/add.png" draggable='false' height='30' width='30'/>
+            <img class={'plus'} src="../assets/used-assets/add.png" draggable='false' height='30' width='30'/>
           </td>
         </tr>
       )}
