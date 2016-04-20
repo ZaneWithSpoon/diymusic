@@ -24,13 +24,17 @@ view Main {
   
   let playingBeat = -1
   let beatWait = []
-
-  let songData = newSong()
   let channels = []
-  channels.push(songData)
-  toggleChecked(songData.hypermeasures[0].id)
 
-  addInstrument('acoustic_grand_piano')
+  let drumChannel = addDrums()
+  //addHypermeasure(drumChannel)
+  let premade = addPremade(drumChannel)
+  let channel1 = addInstrument('acoustic_grand_piano')
+  addHypermeasure(channel1)
+
+  //addHypermeasure(drumChannel)
+  
+  //addHypermeasure("channel-1")
 
 
 
@@ -62,53 +66,74 @@ view Main {
     updateLater()
   }
 
+  function addDrums(){
+    let channelId = _.uniqueId('channel-')
+
+    let initialChannel = {  
+      id:channelId,
+      name:'drums',
+      sampleType:'drumPad',
+      hypermeasures: [] 
+    }
+
+    channels.push(initialChannel)
 
 
-  function newSong(){
+    updateLater() 
+    return channelId  
 
-    let channelId = Math.random().toString(36).substr(2, 9)
-
-    let initialChannel = {  id:channelId,
-                              name:'drums',
-                              sampleType:'drumPad',
-                              hypermeasures: [] }
-
-
-
-      //creating empty 2d matrix to represent grid
-      let empty = new Array
-      for(i = 0; i < 16; i++){
-        empty.push(new Array)
-      }
-
-      //to make a more interesting start\
-
-      for(i = 0; i < 16; i++){
-        empty[i].push('hat')
-      }
-
-      empty[0].push('kick')
-      empty[3].push('kick')
-      empty[7].push('kick')
-      empty[11].push('kick')
-      empty[14].push('kick')
-      empty[4].push('snare')
-      empty[12].push('snare')
-      empty[1].push('tom')
-      empty[9].push('tom')
-
-      let hmId = Math.random().toString(36).substr(2, 9)
-
-      initialChannel.hypermeasures.push({
-          id: hmId,
-          size: 16,
-          instruments: ['kick', 'snare', 'tom', 'hat'],
-          notes: empty,
-          name: 'premade'
-        })
-
-      return initialChannel
   }
+
+  function addPremade(channelId){
+    let loopId = Math.random().toString(36).substr(2, 9)
+    let index = -1
+
+
+    for(i = 0; i < channels.length; i++){
+      if(channels[i].id === channelId){
+        index = i
+      }
+    }
+
+    //creating empty array of arrays (2d matrix)
+    let empty = new Array
+    for(i = 0; i < 16; i++){
+      empty.push(new Array)
+    }
+
+     //to make a more interesting start\
+
+    for(i = 0; i < 16; i++){
+      empty[i].push('hat')
+    }
+
+    empty[0].push('kick')
+    empty[3].push('kick')
+    empty[7].push('kick')
+    empty[11].push('kick')
+    empty[14].push('kick')
+    empty[4].push('snare')
+    empty[12].push('snare')
+    empty[1].push('tom')
+    empty[9].push('tom')
+
+
+    channels[index].hypermeasures.push({
+        id: loopId,
+        size: 16,
+        instruments: ['kick', 'snare', 'tom', 'hat'],
+        notes: empty,
+        name: 'premade'
+    })
+
+    toggleChecked(loopId)
+
+    updateLater()
+
+    return loopId
+
+  }
+
 
   function addHypermeasure(channelId){
 
@@ -149,26 +174,95 @@ view Main {
       })
     }
 
-    return loopId
+    toggleChecked(loopId)
 
     updateLater()
 
+    return loopId
+
   }
 
+  //redo splice methods creating new arrays instead
+  function removeHypermeasure(channelId, loopId) {
+
+    let result = confirm("Are you sure you want to delete this loop?")
+    //let result = true
+
+    if (result) {
+
+      let newChecked = []
+      checkedHypermeasures.map( hm => {
+        if(loopId !== hm){
+          newChecked.push(hm)
+        }
+      })
+
+      checkedHypermeasures = newChecked
+
+      newChannels = []
+
+      channels.map(channel => {
+        if (channel.id === channelId) {
+
+          //remove HM if it isn't the last one
+          if(channel.hypermeasures.length !== 1){
+
+            let newHypermeasures = channel.hypermeasures.filter((loop) => {
+              console.log("compare loops inside hypermeasures")
+              console.log(loop.id)
+              console.log(loopId)
+              return loop.id !== loopId
+            })
+
+            newChannels.push({
+              id: channel.id,
+              name: channel.name,
+              instrument: channel.instrument,
+              sampleType: channel.sampleType,
+              hypermeasures: newHypermeasures
+            })
+            
+          }
+
+
+        } else {
+          newChannels.push(channel)
+        }
+      })
+    }
+
+    channels = newChannels
+
+    //channels = []
+
+    updateLater()
+  }
+
+  function renameHypermeasure(channelId, loopId) {
+
+    let newName = prompt("New Name?")
+
+    console.log(newName)
+
+  }
+
+
   function addInstrument(instrum) {
-    let channelId = Math.random().toString(36).substr(2, 9)
+    let channelId = _.uniqueId('channel-') // Math.random().toString(36).substr(2, 9)
 
+    var newChannel = {
+      id: channelId,
+      name: instrum.slice(-6, instrum.length),
+      instrument: instrum,
+      sampleType: 'pianoRoll',
+      hypermeasures: []
+    }
 
-      var newChannel = {  id:channelId,
-                              name: instrum.slice(-6,instrum.length),
-                              instrument: instrum,
-                              sampleType: 'pianoRoll',
-                              hypermeasures: [] }
+    channels.push(newChannel)  
 
-
-     channels.push(newChannel)                       
-
-     updateLater()
+    updateLater()
+     
+    return channelId                     
   }
 
 
@@ -180,6 +274,8 @@ view Main {
     } else {
       checkedHypermeasures.splice(index, 1)
     }
+
+    console.log(checkedHypermeasures)
 
     view.update()
   }
@@ -216,11 +312,6 @@ view Main {
   }
 
   function playNote(note, instrument) {
-    //console.log('play note')
-
-    // console.log(note)
-    // console.log(instrument)
-
 
     let inst = soundfont.instrument(instrument)
     inst.onready(function() {
@@ -240,7 +331,6 @@ view Main {
 
     sourceBuffer.start()  
 
-    setTimeout(sourceBuffer.start(), 500)
     
   }
 
@@ -258,8 +348,6 @@ view Main {
   // so temporarily turn off flint
 
   function renderAudio(i) {
-
-    //console.log(i)
 
     concentratedNotes.map(channel => {
       if(channel.sampleType == 'drumPad'){
@@ -376,7 +464,8 @@ view Main {
   }
 
 
-
+  // <testButtonAdd onClick={() => {addHypermeasure("channel-1")}}>ADD</testButtonAdd>
+  // <testButtonRem onClick={() => {removeHypermeasure("channel-1", premade)}}>REMOVE</testButtonRem>
   <Header {...{
     bpm, speed, runState,
     onChangeBpm,
@@ -386,7 +475,8 @@ view Main {
     speed, playPrecussion, checkedHypermeasures,
     playingBeat, playNote, channels,
     toggleChecked, toggleNote, 
-    addHypermeasure, addInstrument
+    addHypermeasure, renameHypermeasure,
+    removeHypermeasure, addInstrument
   }} />
 
   //<h1>Main</h1>

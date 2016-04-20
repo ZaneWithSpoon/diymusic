@@ -9,10 +9,15 @@ view Header {
 
   let newBpm = 0
 
+  function clicked(){
+    console.log("clicked")
+    view.update()
+  }
+
 
   <header>
     <box>
-    	<title>diym</title>
+    	<title onClick={clicked}>diym</title>
     </box>
     <box>
       <li>

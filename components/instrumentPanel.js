@@ -11,40 +11,48 @@ view InstrumentPanel {
   prop channels
 
   prop addHypermeasure
+  prop removeHypermeasure
+  prop renameHypermeasure
   prop addInstrument
 
   let newInstrum = false
   let chosenInstrum = ''
   let options = []
 
-  let channelIds = []  
-  on.props(() => {
-    channels.map( x => {
-      channelIds.push(x.id)
-    })
-  })
 
   jquery.getJSON("../assets/instrumentList.json", function(json) {
     options = json.instruments
   })
 
+  on.props(() => {
+    console.log("instrumentPanel")
+    console.log(channels)
+  })
+
 
   function addInstrumentLoop(channelId) {
-      
-      changeFocus(addHypermeasure(channelId))
+
+    let hmid = addHypermeasure(channelId)
+    changeFocus(hmid)
 
   }
 
-  function addChannel(){
-    //console.log('Add channel')
-    newInstrum = true
+  function remove(channelId, loopId) {
+    //console.log("remove " + loopId)
+    // console.log(channels)
+    removeHypermeasure(channelId, loopId)
+  }
 
+  function addChannel(){
+    newInstrum = true
   }
 
   function chooseInstrum(instrum){
     newInstrum = false
-    var back = addInstrument(instrum)
+    let chanId = addInstrument(instrum)
+    addInstrumentLoop(chanId)
   }
+
 
 
   <instrumentPanel>
@@ -56,24 +64,27 @@ view InstrumentPanel {
     <title>Instrument panel </title>
     <table>
       <tbody>
-        <tr repeat={channels} >
-          <td class={'instrumTitle'} key={_.name}> {_.name} </td>
+      {channels.map( _ =>
+        <tr id={_.id} key={_.id}>
+          <td class={'instrumTitle'} key={_.id}> {_.name} </td>
           {_.hypermeasures.map( i =>
-            <td key={i.id} >
+            <td id={i.id} key={i.id} >
               <Hypermeasures 
                 loop={i}
                 focus={() => {changeFocus(i.id)}}
-                options={() => {console.log('options')}}
+                dots={() => {dots(i.id)}}
                 checked={isChecked(i.id)}
+                renameHypermeasure = { () => {renameHypermeasure(_.id, i.id)} }
+                removeHypermeasure = { () => {removeHypermeasure(_.id, i.id)} }
                 toggleChecked={toggleChecked}/>
             </td>
           )}
-          <td onClick={() => addInstrumentLoop(_.id)}>
-            <Hypermeasures
-              loop='undefined'
-              instrument={_.instrument}/>
+
+          <td class={'addButton'} onClick={() => addInstrumentLoop(_.id)}>
+            <img class={'plus'} src="../assets/basic-ui/png/add.png" draggable='false' height='30' width='30'/>
           </td>
         </tr>
+      )}
       </tbody>
     </table>
 
@@ -100,6 +111,24 @@ view InstrumentPanel {
   $instrumTitle = {
     width: 100,
     wordWrap: 'break-word'
+  }
+
+  $addButton = {
+    background: 'lightgrey',
+    border: 'dashed',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: 'black',
+    height: 50,
+    width: 100
+  }
+
+  $plus = {
+    draggable: 'false',
+    display: 'block',
+    margin: 'auto',
+    marginTop: 10,
+    verticalAlign:'middle'
   }
 
 }

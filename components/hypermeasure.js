@@ -1,39 +1,103 @@
 view Hypermeasures {
 
+  //TODO: figure out why fixed width makes things dissappear forever...
+
   prop loop
   prop focus
   prop toggleChecked
-  prop options
+  prop removeHypermeasure
+  prop renameHypermeasure
   prop checked
+
+
+  let dropdown = false
+  let height = 50
+  let bottomBorder = 0
+  let color = '#1CCAD8'
+
+  
+  function remove() {
+
+    color = '#1CCAD8'
+    dropdown = false
+    height = 50
+    bottomBorder = 0
+
+    removeHypermeasure()
+  }
+
+
+  function changeChecked(id) {
+
+    if(!checked){
+      color = '#1CCAD8'
+    } else {
+      color = '#629093'
+    }
+
+    toggleChecked(id)
+
+  }
+
+  function showBox() {
+    if(dropdown){
+      height = 50
+      bottomBorder = 0
+      dropdown = false
+    } else {
+      height = 100
+      bottomBorder = 1
+      dropdown = true
+    }
+  }
 
   <loops>
 
-    <occupiedSlot 
-      draggable='true' 
-      if={loop != 'undefined'}>
+    <occupiedSlot draggable='true'>
 
-      <selectDiv onClick={focus}>
+      <selectDiv onClick={focus} >
         {loop.name}
       </selectDiv>
       <optionsDiv>
-        <checkDiv onClick={() => {toggleChecked(loop.id)}}>
+        <checkDiv onClick={() => {changeChecked(loop.id)}}>
           <img if={checked} src="../assets/basic-ui/png/basic14.png" draggable='false' height='75%' width='75%'/>
         </checkDiv>
-        <menuDiv onClick={options}>
-          ......
+        <menuDiv onClick={() => {showBox()}}>
+          .....
         </menuDiv>
       </optionsDiv>
 
+    <dropdown if={dropdown}>
+      <rename onClick={() => {renameHypermeasure()}}>
+        rename
+      </rename>
+      <remove onClick={() => {remove()}}>
+        delete
+      </remove>
+    </dropdown>
+
     </occupiedSlot>
 
-    <addButton  if={loop == 'undefined'}>
-      <img class='plus' src="../assets/basic-ui/png/add.png" draggable='false' height='30' width='30'/>
-    </addButton>
+
 
   </loops>
 
+
+  $dropdown = {
+    marginTop: 50,
+    height: 50,
+    borderTop: 'solid',
+    borderWidth: 1
+  }
+
+  $rename = {
+    borderBottom: 'solid',
+    borderWidth: 1    
+  }
+
   $selectDiv = {
-    height: '100%',
+    height: 50,
+    display: 'inline',
     width: '70%',
     float: 'left'
   }
@@ -55,31 +119,12 @@ view Hypermeasures {
 
   $occupiedSlot = {
     draggable: 'true',
-    background: '#1CCAD8',
+    background: color,
     border: 'solid',
     borderRadius: 5,
     borderWidth: 1,
     borderColor: 'black',
-    height: 50,
-    width: 100
-  }
-
-  $addButton = {
-    background: 'lightgrey',
-    border: 'dashed',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: 'black',
-    height: 50,
-    width: 100
-  }
-
-  $plus = {
-    draggable: 'false',
-    display: 'block',
-    margin: 'auto',
-    marginTop: 10,
-    verticalAlign:'middle'
-  }
+    height: height
+    }
 
 }
