@@ -1,0 +1,17 @@
+{
+  "author": "",
+  "name": "motion-app-diymusic",
+  "repository": "https://github.com/diymusic",
+  "description": "",
+  "version": "1.0.0",
+  "main": "",
+  "scripts": {},
+  "dependencies": {
+    "express": "^4.13.4",
+    "jquery": "^2.2.2",
+    "lodash": "^4.6.1",
+    "soundfont-player": "^0.7.0",
+    "sugar": "^1.4.1"
+  },
+  "installed": []
+}
